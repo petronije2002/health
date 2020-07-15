@@ -3,7 +3,22 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+
+  backendURL: "http://192.168.2.3:5000",
+  
+  firebaseConfig: {
+    apiKey: "AIzaSyBWpHNQdzVsnuTeaf7x0TdcUT64kXQJrSA",
+    authDomain: "robust-delight-184620.firebaseapp.com",
+    databaseURL: "https://robust-delight-184620.firebaseio.com",
+    projectId: "robust-delight-184620",
+    storageBucket: "robust-delight-184620.appspot.com",
+    messagingSenderId: "344106497166",
+    appId: "1:344106497166:web:cfb55a577ffe2ba10845df",
+    measurementId: "G-66XL3K55GJ"
+  }
+
+
 };
 
 /*
