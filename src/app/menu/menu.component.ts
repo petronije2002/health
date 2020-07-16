@@ -22,12 +22,18 @@ export class MenuComponent implements OnInit , OnDestroy{
 
   ngOnInit(): void {
 
-    this.srv.getCurrentValue.subscribe(el=>{
+    this.srv.logEmitter.subscribe(ev=>{
 
-      this.isAdmin = el['isAdmin']
-      this.isLogged = el['isLogged']
-      console.log(this.isAdmin, this.isLogged)
+      this.isAdmin = ev.isAdmin,
+      this.isLogged = ev.isLogged
     })
+
+    // this.srv.getCurrentValue.subscribe(el=>{
+
+    //   this.isAdmin = el['isAdmin']
+    //   this.isLogged = el['isLogged']
+    //   console.log(this.isAdmin, this.isLogged)
+    // })
 
   }
 
@@ -43,6 +49,9 @@ export class MenuComponent implements OnInit , OnDestroy{
 
     sessionStorage.removeItem('token')
     sessionStorage.removeItem('customToken1')
+
+    this.srv.emitCurrentLogin()
+
 
     // sessionStorage.clear()
     // this.auth.isAdmin = false

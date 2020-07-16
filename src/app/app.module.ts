@@ -26,6 +26,7 @@ import {
 } from 'angularx-social-login';
 
 import { MenuComponent } from './menu/menu.component';
+import { DialogComponent } from './dialog/dialog.component';
 
 
 
@@ -34,7 +35,8 @@ import { MenuComponent } from './menu/menu.component';
   declarations: [
     AppComponent,
     WelcomeComponent,
-    MenuComponent
+    MenuComponent,
+    DialogComponent
   ],
   imports: [
     HammerModule,

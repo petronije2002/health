@@ -1,3 +1,4 @@
+import { DialogComponent } from './../dialog/dialog.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { AuthService } from './../auth.service';
@@ -9,8 +10,9 @@ import { DeviceUUID } from './../../../node_modules/device-uuid'
 import { AngularFirestore } from '@angular/fire/firestore'
 import { AngularFireAuth } from '@angular/fire/auth'
 import {SocialUser ,SocialAuthService, GoogleLoginProvider } from "angularx-social-login";
-import {urlParameters,tokenRequest} from './../models/models'
+import {urlParameters,tokenRequest, event_} from './../models/models'
 import { Subscription } from 'rxjs';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 
 
 // export interface alreadySigned {
@@ -30,7 +32,6 @@ import { Subscription } from 'rxjs';
 
 
 export class WelcomeComponent implements OnInit {
-
 
   customTokenSubscription: Subscription 
   loggedWithGoogle: boolean = false
@@ -69,31 +70,25 @@ export class WelcomeComponent implements OnInit {
       private auth: AngularFireAuth,
       private authService: SocialAuthService,
       private http: HttpClient,
+      private dialog: MatDialog
       ) { }
 
 
   ngOnInit(): void {
 
-    // sessionStorage.clear()
+    this.srv.logEmitter.subscribe(ev=>{
 
-    this.srv.getCurrentValue.subscribe((el)=>{
-      next:  this.isLogged= el['isLogged'];
-      console.log(el)
+      this.isAdmin = ev.isAdmin
+      this.isLogged = ev.isLogged
 
-      if (el['role']==='admin'){
-        // this.srv.isAdmin = true
-
-        this.isAdmin = true
-        this.isLogged = true
-      }else{
-        this.isAdmin = false
-        this.isLogged = true
-        this.alreadySignedIn = false
+      if(this.isLogged==false){
+        sessionStorage.clear()
+        this.form_.reset()
+        this.form_.disable()
+        
       }
-  
     })
 
-    // First check uuid, based on device/browser , for anonimous acccess
 
     let tmp_check = sessionStorage.getItem('uniqueID')
 
@@ -104,31 +99,59 @@ export class WelcomeComponent implements OnInit {
       sessionStorage.setItem('uniqueID', this.tmp_id)
     }
 
-
-   
-
     this.form_.setValue({'name_': null,"phone_":null,"email_":null})
 
     this.route.queryParams.subscribe((el:urlParameters) => {
+
+
+      console.log("url parameters", el)
 
       // Check if there are some parameters gotten from qr code
 
       if (Object.keys(el).length==3){
 
-        let aaaa = JSON.stringify(this.parameters)
-        sessionStorage.setItem('urlParameters', aaaa)      
+        let aaaa = JSON.stringify(el)
+        sessionStorage.setItem('urlParameters', aaaa)
+        setTimeout(()=>{},500) 
+  
         this.customTokenSubscription = this.srv.requestToken().subscribe(customToken=>{
           sessionStorage.setItem('customToken1',customToken['token'] )
 
-          // this.srv.signOut1 =false
+          this.srv.loginFromToken()
 
-          console.log('custom token', customToken)
+          this.auth.signInWithCustomToken(customToken['token']).then(el2=>{
+            this.srv.isLogin = true
+            this.srv.emitCurrentLogin()
+
+            // test if there is already an document
+
+           this.db.collection('restaurants').doc(JSON.parse(sessionStorage.getItem('urlParameters'))['restaurant_name']).collection(new Date().toDateString()).doc(this.tmp_id).get().subscribe(doc_=>{
+
+            console.log("retrieved document",doc_.data())
+
+            let name_ =  doc_.data()['name_']
+
+            let txt_ = `You have already sent your data. Thank you, ${name_}`
+            // this.alreadySignedIn =true
+            this.form_.disable()
+
+            this.openDialog(txt_)
+
+           },error=>{console.log(error)})
+
+          }).catch(error=>console.log("Error with login to database"))
+    
+        
         })
+      
+      
+      }
+    
 
-      }else{
+         
+      else{
 
         sessionStorage.setItem('urlParameters', '')
-
         console.log("Please scan the QR CODE")
       }
       
@@ -156,7 +179,6 @@ export class WelcomeComponent implements OnInit {
   
   signInWithGoogle() {
 
-
     const googleLoginOptions =  {
       scope: 'profile email'
     }; 
@@ -170,7 +192,11 @@ export class WelcomeComponent implements OnInit {
 
     this.srv.isAdmin=true
     this.srv.isLogin = true
-    this.isAdmin = true
+    
+    this.srv.emitCurrentLogin()
+
+    console.log("GOOGLE TOKEN", rr)
+
 
     sessionStorage.setItem('token', rr.idToken)
 
@@ -179,16 +205,17 @@ export class WelcomeComponent implements OnInit {
     this.srv.requestToken().subscribe((rr1)=>{
       //{ 'uid': this.tmp_id, 'parameters': this.parameters, 'date': new Date().toDateString() }
 
-      console.log("QQQQQQQQQQQQ", rr1['token'])
-
       sessionStorage.setItem('customToken1', rr1['token'])
 
       this.auth.signInWithCustomToken(rr1['token']).then(el2=>{
 
-        this.srv.isAdmin=true
+        // this.srv.isAdmin=true
 
-        this.srv.isLogin = true
-        this.isAdmin = true
+        // this.srv.isLogin = true
+        // this.isAdmin = true
+
+        this.srv.loginFromToken()
+
 
         console.log('Logged in', el2)
 
@@ -212,43 +239,32 @@ export class WelcomeComponent implements OnInit {
   }
 
 
+  openDialog(text_?:string) {
+
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      id: 1,
+      title: text_
+  };
+
+    this.dialog.open(DialogComponent, dialogConfig);
+}
+
+
 
   submitForm() {
 
     this.srv.requestToken().subscribe(el => {
-
-      // { 'uid': this.tmp_id, 'parameters': this.parameters, 'date': new Date().toDateString() }
-
-      console.log('ReturnedToken', el['token'])
-
-
-
       this.token_ = el['token']
-
-
-      this.auth.signInWithCustomToken(el['token']).then(el => {
-
-        console.log("Loging result", el)
+      this.auth.signInWithCustomToken(el['token']).then(el1 => {
         let tmp_date = new Date().toDateString()
-        console.log("Loging result", this.parameters)
-
-        this.db.collection('restaurants').doc(this.parameters['restaurant_name']).collection(tmp_date).doc(this.tmp_id).set(this.form_.value).then((el1) => {
-
-          console.log("DB result", el1)
+  
+        this.db.collection('restaurants').doc(JSON.parse(sessionStorage.getItem('urlParameters'))['restaurant_name']).collection(tmp_date).doc(this.tmp_id).set(this.form_.value).then((el1) => {
           this.alreadySignedIn = true
-
-
-
-
-
           this.form_.reset()
-
-          console.log("PARAMTERS!!!",this.parameters)
-
-         this.router.navigateByUrl('/')
-
-
-
 
         }).catch(error => {
           console.log('there was an error')

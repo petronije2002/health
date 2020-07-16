@@ -59,6 +59,16 @@ export class AuthService implements OnInit {
   //   },1500)
   // })
   
+  emitCurrentLogin(){
+
+    let tmp_ee :event_ ={
+      isAdmin: this.isAdmin,
+      isLogged: this.isLogin
+
+    }
+
+    this.logEmitter.next(tmp_ee)
+  }
   
   loginFromToken() :event_ {
 
@@ -82,7 +92,7 @@ export class AuthService implements OnInit {
       if ((Number(tmp_now1),Number(decoded['exp'])-Number(tmp_now1))>0){
         tmp_isLogin = true
       }else{
-        tmp_isLogin = false
+        tmp_isLogin = true
       }
     }catch{
 
@@ -91,9 +101,6 @@ export class AuthService implements OnInit {
        tmp_isLogin = false
     }
 
-
-
-
     let ee :event_ = {
       isAdmin: tmp_isAdmin,
       isLogged: tmp_isLogin
@@ -101,6 +108,8 @@ export class AuthService implements OnInit {
 
     this.isAdmin = tmp_isAdmin
     this.isLogin = tmp_isLogin
+
+    this.logEmitter.next(ee)
 
     return ee
 
