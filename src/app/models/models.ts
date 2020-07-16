@@ -9,3 +9,10 @@ export interface tokenRequest{
     parameters: Object
     date: string
   }
+
+  export interface event_ {
+
+    isLogged: boolean,
+    isAdmin: boolean,
+  
+  }

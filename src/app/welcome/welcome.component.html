@@ -1,119 +1,76 @@
-<mat-toolbar  color="primary" class="navbar" >
-    <mat-toolbar-row fxFlexLayout="row" fxFlexAlign="start center">
-  
-      <div fxFlex="80">
-  
-        <button  *ngIf="isAdmin" mat-button [matMenuTriggerFor]="belowMenu">Menu</button>
-  
-        <mat-menu #belowMenu="matMenu" yPosition="below">
-          <button mat-menu-item routerLink='/grid' routerLinkActive="active">Shopping</button>
-          <button mat-menu-item routerLink='' routerLinkActive="active"> Create Sections</button>
-          <button mat-menu-item routerLink='' routerLinkActive="active">Create Menu</button>
-          <button mat-menu-item routerLink='' routerLinkActive="active">Menu Builder</button>
-  
-        </mat-menu>
-  
-  
-  
-  
-  
-        <button *ngIf="isAdmin" mat-button [matMenuTriggerFor]="beforeMenu">Preview</button>
-  
-        <mat-menu #beforeMenu="matMenu" xPosition="before">
-          <button mat-menu-item routerLink='/previewMenu' routerLinkActive="active">Preview menu</button>
-          <button mat-menu-item>2</button>
-        </mat-menu>
+<div class="welcome">
+</div>
+
+<form [formGroup]="form_" *ngIf="!isAdmin">
+  <div fxFlex="10%"></div>
+
+  <div fxFlex="80%" fxLayout="column" fxLayoutAlign="center stretch">
+
+    <mat-form-field fxFlex>
+
+      <input matInput formControlName="name_" autocomplete="username" [readonly]="readonly_"
+        placeholder="Please enter your name">
+
+      <mat-icon matSuffix>mode_edit</mat-icon>
+    </mat-form-field>
+    <br>
+
+    <mat-form-field fxFlex>
+
+      <input matInput type="tel" formControlName="phone_" placeholder="Please enter your phone number">
+
+      <mat-icon matSuffix>mode_edit</mat-icon>
+    </mat-form-field>
+    <br>
+
+    <mat-form-field fxFlex>
+
+      <input matInput type="email" formControlName="email_" placeholder="Please enter email" [readonly]="readonly_">
+
+      <mat-icon matSuffix>mode_edit</mat-icon>
+    </mat-form-field>
 
 
 
-       
-      
-  
-      </div>
+    <div fxFlex>
+      <button mat-raised-button color="primary" (click)="submitForm()" [disabled]="!form_.valid">Submit</button>
 
-      <div fxFlex>
-        <button *ngIf="isAdmin" mat-button [matMenuTriggerFor]="loggmenu" >Logged As: {{'pera'}}</button>
-        <mat-menu #loggmenu="matMenu" yPosition="below">
-          <button mat-menu-item routerLink='/previewMenu' routerLinkActive="active">Role</button>
-          <button mat-menu-item>SignOut</button>
-        </mat-menu>
+      <button mat-raised-button (click)="resetForm()">Cancel</button>
 
-      </div>
-  
-  
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <div>
+    </div>
+
+
+
   </div>
-  
-    <form [formGroup]="form_"  *ngIf="!isAdmin">
-        <div fxFlex="10%"></div>
 
-        <div fxFlex="80%"  fxLayout="column" fxLayoutAlign="center stretch">
+</form>
 
-        <mat-form-field fxFlex>
+<!-- <div>{{this.token_}}</div>    -->
+<div *ngIf="!isAdmin">
+  <div *ngIf="alreadySignedIn" fxLayout="column" fxLayoutAlign="center stretch"> You provided your data, for healt
+    check. Thank you.
+  </div>
+</div>
 
-            <input matInput formControlName="name_" autocomplete="username" [readonly]="readonly_"
-                placeholder="Please enter your name">
+<!-- <div>USER: {{username}}</div> -->
 
-            <mat-icon matSuffix>mode_edit</mat-icon>
-        </mat-form-field>
-        <br>
+<div *ngIf="!isAdmin">
 
-        <mat-form-field fxFlex>
+  <div fxFlex="10%"></div>
 
-            <input matInput type="tel" formControlName="phone_" placeholder="Please enter your phone number">
-
-            <mat-icon matSuffix>mode_edit</mat-icon>
-        </mat-form-field>
-        <br>
-
-        <mat-form-field fxFlex>
-
-            <input matInput type="email" formControlName="email_" placeholder="Please enter email"
-                [readonly]="readonly_">
-
-            <mat-icon matSuffix>mode_edit</mat-icon>
-        </mat-form-field>
+  <div fxFlex="20%" fxLayout="column" fxLayoutAlign="center stretch">
+    <a style="text-transform:none" (click)="signInWithGoogle()">
 
 
 
-        <div fxFlex>
-            <button mat-raised-button color="primary" (click)="submitForm()" [disabled]="!form_.valid">Submit</button>
+      <img width="50px" style="margin-top:100px; margin-right:10px" alt="Google sign-in"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
 
-            <button mat-raised-button (click)="resetForm()">Cancel</button>
-
-        </div>
+    </a>
 
 
-
-    </div>
-
-    </form>
-
-     <!-- <div>{{this.token_}}</div>    -->
-    <div *ngIf="alreadySignedIn" fxLayout="column" fxLayoutAlign="center stretch"> You provided your data, for healt check. Thank you.
-    </div>
-
-    <!-- <div>USER: {{username}}</div> -->
-
-    <div *ngIf="!isAdmin">
-
-        <div fxFlex="10%"></div>
-
-        <div fxFlex="20%"  fxLayout="column" fxLayoutAlign="center stretch">
-        <a style="text-transform:none" (click)="signInWithGoogle()">
+  </div>
 
 
 
-            <img width="50px" style="margin-top:100px; margin-right:10px" alt="Google sign-in"
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
-
-        </a>
-
-       
-        </div>
-
-       
-
-    </div>
+</div>

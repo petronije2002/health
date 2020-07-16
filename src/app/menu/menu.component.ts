@@ -1,3 +1,4 @@
+import { AuthService } from './../auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 // import {  CartOperatorService } from './../../services/cart-operator.service'
 import { Subscription } from 'rxjs';
@@ -12,27 +13,45 @@ import { Router } from '@angular/router';
 })
 export class MenuComponent implements OnInit , OnDestroy{
 
-  nubmerOfCartItems : number
+  
+  constructor(public router: Router, public srv: AuthService) { }
 
-  positionBadge: MatBadgePosition
-  sizeBadge: MatBadgeSize
-
-  numberOfWishListItems: number
-
-  cartSubscriber : Subscription
-
-  wishListSubscription : Subscription
-
-  constructor(public router: Router) { }
+  isAdmin:boolean 
+  isLogged: boolean
+  
 
   ngOnInit(): void {
+
+    this.srv.getCurrentValue.subscribe(el=>{
+
+      this.isAdmin = el['isAdmin']
+      this.isLogged = el['isLogged']
+      console.log(this.isAdmin, this.isLogged)
+    })
+
+  }
+
+
+  signOut(){
+
+    console.log("sougned")
+
+    // this.srv.signOut1 = true
+
+    this.srv.isAdmin = false
+    this.srv.isLogin = false
+
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('customToken1')
+
+    // sessionStorage.clear()
+    // this.auth.isAdmin = false
+    // this.auth.isLogin=false
 
   }
 
   ngOnDestroy(){
-
-    
-
+  
   }
 
 

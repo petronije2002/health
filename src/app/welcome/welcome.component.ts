@@ -13,11 +13,11 @@ import {urlParameters,tokenRequest} from './../models/models'
 import { Subscription } from 'rxjs';
 
 
-export interface alreadySigned {
-  name_: string,
-  phone_: string,
-  email?: string
-}
+// export interface alreadySigned {
+//   name_: string,
+//   phone_: string,
+//   email?: string
+// }
 
 
 @Component({
@@ -51,6 +51,8 @@ export class WelcomeComponent implements OnInit {
   token_
   tmp_id
 
+
+
   form_: FormGroup = new FormGroup({
     name_: new FormControl(null, Validators.required),
     phone_: new FormControl(null, Validators.required),
@@ -72,16 +74,21 @@ export class WelcomeComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // sessionStorage.clear()
 
-    this.srv.getLogin.subscribe((el)=>{
+    this.srv.getCurrentValue.subscribe((el)=>{
       next:  this.isLogged= el['isLogged'];
-
       console.log(el)
 
       if (el['role']==='admin'){
+        // this.srv.isAdmin = true
+
         this.isAdmin = true
+        this.isLogged = true
       }else{
         this.isAdmin = false
+        this.isLogged = true
+        this.alreadySignedIn = false
       }
   
     })
@@ -96,7 +103,9 @@ export class WelcomeComponent implements OnInit {
       this.tmp_id = new DeviceUUID().get()
       sessionStorage.setItem('uniqueID', this.tmp_id)
     }
-    
+
+
+   
 
     this.form_.setValue({'name_': null,"phone_":null,"email_":null})
 
@@ -105,114 +114,44 @@ export class WelcomeComponent implements OnInit {
       // Check if there are some parameters gotten from qr code
 
       if (Object.keys(el).length==3){
-        this.parameters = el
-        console.log('URL 123parameters', this.parameters)
 
-
-
-        let tmp_token_req: tokenRequest = {
-
-          uid: this.tmp_id,
-          parameters: this.parameters,
-
-          date: new Date().toDateString()
-
-        }
-
-
-        this.customTokenSubscription = this.srv.requestToken(tmp_token_req).subscribe(customToken=>{
+        let aaaa = JSON.stringify(this.parameters)
+        sessionStorage.setItem('urlParameters', aaaa)      
+        this.customTokenSubscription = this.srv.requestToken().subscribe(customToken=>{
           sessionStorage.setItem('customToken1',customToken['token'] )
+
+          // this.srv.signOut1 =false
+
+          console.log('custom token', customToken)
         })
 
       }else{
+
+        sessionStorage.setItem('urlParameters', '')
 
         console.log("Please scan the QR CODE")
       }
       
       })
 
+  
     
-
-    
-
-
-
-    // this.username = ""
-
-    // this.authService.authState.subscribe((user_)=>{
-
-    //   this.user = user_
-
-    //   this.username = this.user.name
-    // })
-
-    // let test_ = new DeviceUUID().get()
-    // var du = new DeviceUUID().parse();
-    // let tmp_check = sessionStorage.getItem('uniqueID')
-
-    // if (tmp_check !== null) {
-    //   this.tmp_id = sessionStorage.getItem('uniqueID')
-    // } else {
-    //   this.tmp_id = new DeviceUUID().get()
-    //   localStorage.setItem('uniqueID', this.tmp_id)
-    // }
-    // let tmp_Date = new Date().toDateString()
-
-    this.route.queryParams.subscribe((el:urlParameters) => {
-      this.parameters = el
-      console.log('url parameters', this.parameters)
-
-      console.log(this.parameters)
-      if (Object.keys(this.parameters).length <3) {
-        console.log('Please scan the code again')
-      } else {
-        setTimeout(()=>{
-          this.srv.requestToken({ 'uid': this.tmp_id, 'parameters': this.parameters, 'date': new Date().toDateString() }).subscribe(el1 => {
-
-          this.token_ = el1['token']
-          console.log("Custom token", el1['token'])
-
-          sessionStorage.setItem('customToken1',this.token_)
-
-          
-          
-          this.auth.signInWithCustomToken(el1['token']).then(el2=>{
-          
-
-          this.db.collection('restaurants').doc('bukowsky').collection(new Date().toDateString()).doc(this.tmp_id).snapshotChanges().subscribe(el3=>{
-
-            console.log('complete', el3)
-
-            
-
-            
-            console.log('current document: ', el3.payload.data())
-
-            let current_doc = el3.payload.data()
-            
-            if(typeof current_doc !=='undefined'){
-              this.alreadySignedIn =true
-              this.alreadySignedInData = current_doc
-            }
-
-          })
-
-
-
-
-      }).catch(error=>{
-        console.log(error)
-      })
-
-
-
-
-        })
-      },1000)
-      }
-    })
 
   }
+
+  // signOut(){
+
+  //   console.log("soignedout from welcome")
+  //   sessionStorage.removeItem('token')
+  //   this.form_.reset()
+
+  //   this.isAdmin = false
+  //   this.isLogged = true
+  //   this.srv.isAdmin=false
+
+  //   this.srv.isLogin = true
+
+  // }
 
   
   signInWithGoogle() {
@@ -229,17 +168,27 @@ export class WelcomeComponent implements OnInit {
 
     this.readonly_=true
 
+    this.srv.isAdmin=true
+    this.srv.isLogin = true
+    this.isAdmin = true
+
     sessionStorage.setItem('token', rr.idToken)
 
     // this.token_=rr.idToken
 
-    this.srv.requestToken({ 'uid': this.tmp_id, 'parameters': this.parameters, 'date': new Date().toDateString() }).subscribe((rr1)=>{
+    this.srv.requestToken().subscribe((rr1)=>{
+      //{ 'uid': this.tmp_id, 'parameters': this.parameters, 'date': new Date().toDateString() }
 
       console.log("QQQQQQQQQQQQ", rr1['token'])
 
       sessionStorage.setItem('customToken1', rr1['token'])
 
       this.auth.signInWithCustomToken(rr1['token']).then(el2=>{
+
+        this.srv.isAdmin=true
+
+        this.srv.isLogin = true
+        this.isAdmin = true
 
         console.log('Logged in', el2)
 
@@ -266,7 +215,9 @@ export class WelcomeComponent implements OnInit {
 
   submitForm() {
 
-    this.srv.requestToken({ 'uid': this.tmp_id, 'parameters': this.parameters, 'date': new Date().toDateString() }).subscribe(el => {
+    this.srv.requestToken().subscribe(el => {
+
+      // { 'uid': this.tmp_id, 'parameters': this.parameters, 'date': new Date().toDateString() }
 
       console.log('ReturnedToken', el['token'])
 

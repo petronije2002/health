@@ -1,55 +1,39 @@
-<mat-toolbar color="primary" class="navbar" >
-    <mat-toolbar-row fxFlexLayout="row" fxFlexAlign="start center">
-  
-      <div fxFlex="50">
-  
-        <button mat-button [matMenuTriggerFor]="belowMenu">Menu</button>
-  
-        <mat-menu #belowMenu="matMenu" yPosition="below">
-          <button mat-menu-item routerLink='/grid' routerLinkActive="active">Shopping</button>
-          <button mat-menu-item routerLink='' routerLinkActive="active"> Create Sections</button>
-          <button mat-menu-item routerLink='' routerLinkActive="active">Create Menu</button>
-          <button mat-menu-item routerLink='' routerLinkActive="active">Menu Builder</button>
-  
-        </mat-menu>
-  
-  
-  
-  
-  
-        <button mat-button [matMenuTriggerFor]="beforeMenu">Preview</button>
-  
-        <mat-menu #beforeMenu="matMenu" xPosition="before">
-          <button mat-menu-item routerLink='/previewMenu' routerLinkActive="active">Preview menu</button>
-          <button mat-menu-item>2</button>
-        </mat-menu>
-  
-      </div>
-  
-          <!-- <mat-icon  matBadge="{{nubmerOfCartItems}}" matBadgeColor="warn">add_shopping_cart</mat-icon> -->
-  
-  
-          <!-- <div  ><a fxFlex  mat-button  (click)="router.navigate(['/cart-view']);"    ><mat-icon   matBadgeSize="medium"  matBadgeColor="primary" >add_shopping_cart</mat-icon></a></div>
-  
-  
-  
-          <div  ><a  fxFlex mat-button    ><mat-icon   matBadgeSize="small"  matBadgeColor="warn" class="favoriteIcon" >favorite</mat-icon></a></div>
-   -->
-  
-  
-  
-        <!-- <div fxFlex>
-          <mat-icon   matBadge="{{numberOfWishListItems}}" matBadgeColor="warn">favorite</mat-icon>
-  
-  
-        </div> -->
-  
-  
-  
-  
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <div>
-    <router-outlet></router-outlet>
-  </div>
-  
+<mat-toolbar  color="primary" class="navbar" >
+  <mat-toolbar-row fxFlexLayout="row" fxFlexAlign="start center">
+
+    <div fxFlex="80">
+
+      <button  *ngIf="isAdmin" mat-button [matMenuTriggerFor]="belowMenu">Menu</button>
+
+
+      <mat-menu #belowMenu="matMenu" yPosition="below">
+        <button mat-menu-item routerLink='/grid' routerLinkActive="active">Shopping</button>
+        <button mat-menu-item routerLink='' routerLinkActive="active"> Create Sections</button>
+        <button mat-menu-item routerLink='' routerLinkActive="active">Create Menu</button>
+        <button mat-menu-item routerLink='' routerLinkActive="active">Menu Builder</button>
+
+      </mat-menu>
+
+      <button *ngIf="isAdmin" mat-button [matMenuTriggerFor]="beforeMenu">Preview</button>
+
+      <mat-menu #beforeMenu="matMenu" xPosition="before">
+        <button mat-menu-item routerLink='/previewMenu' routerLinkActive="active">Preview menu</button>
+        <button mat-menu-item>2</button>
+      </mat-menu>
+
+    </div>
+
+    <div fxFlex>
+      <button *ngIf="isAdmin" mat-button [matMenuTriggerFor]="loggmenu" >Logged As: {{'pera'}}</button>
+      <mat-menu #loggmenu="matMenu" yPosition="below">
+        <button mat-menu-item routerLink='/previewMenu' routerLinkActive="active">Role</button>
+        <button mat-menu-item  (click)="signOut()">SignOut</button>
+      </mat-menu>
+    </div>
+
+
+  </mat-toolbar-row>
+</mat-toolbar>
+
+
+<router-outlet></router-outlet>
