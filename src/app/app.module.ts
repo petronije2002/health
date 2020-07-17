@@ -60,7 +60,7 @@ import { DialogComponent } from './dialog/dialog.component';
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(  
+            provider: new GoogleLoginProvider(
                         
               "344106497166-cdlji51ggoo1s893fjufar3memsmbvk8.apps.googleusercontent.com"
             ),

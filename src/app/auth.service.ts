@@ -152,7 +152,6 @@ export class AuthService implements OnInit {
 
   getCurrentValue: Observable<any> = Observable.create((observer) => {
     setInterval(() => {
-    
       observer.next({'isLogged': this.isLogin, 'role':this.role_,'isAdmin': this.isAdmin})
 
     }, 1500)

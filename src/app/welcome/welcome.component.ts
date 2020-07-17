@@ -32,6 +32,7 @@ import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 
 
 export class WelcomeComponent implements OnInit {
+  error_
 
   customTokenSubscription: Subscription 
   loggedWithGoogle: boolean = false
@@ -85,7 +86,7 @@ export class WelcomeComponent implements OnInit {
         sessionStorage.clear()
         this.form_.reset()
         this.form_.disable()
-        
+
       }
     })
 
@@ -102,10 +103,7 @@ export class WelcomeComponent implements OnInit {
     this.form_.setValue({'name_': null,"phone_":null,"email_":null})
 
     this.route.queryParams.subscribe((el:urlParameters) => {
-
-
       console.log("url parameters", el)
-
       // Check if there are some parameters gotten from qr code
 
       if (Object.keys(el).length==3){
@@ -116,6 +114,8 @@ export class WelcomeComponent implements OnInit {
   
         this.customTokenSubscription = this.srv.requestToken().subscribe(customToken=>{
           sessionStorage.setItem('customToken1',customToken['token'] )
+
+          console.log("CUSTOM TOKEN RECEIVED",customToken['token'] )
 
           this.srv.loginFromToken()
 
@@ -139,7 +139,12 @@ export class WelcomeComponent implements OnInit {
 
            },error=>{console.log(error)})
 
-          }).catch(error=>console.log("Error with login to database"))
+          }).catch(error=>{console.log("Error with login to database",error.message);
+
+          this.error_ =  error.message
+        }
+          
+          )
     
         
         })
@@ -152,6 +157,10 @@ export class WelcomeComponent implements OnInit {
       else{
 
         sessionStorage.setItem('urlParameters', '')
+
+        this.openDialog("Please scan QR CODE")
+
+        this.form_.disable()
         console.log("Please scan the QR CODE")
       }
       
@@ -263,7 +272,16 @@ export class WelcomeComponent implements OnInit {
         let tmp_date = new Date().toDateString()
   
         this.db.collection('restaurants').doc(JSON.parse(sessionStorage.getItem('urlParameters'))['restaurant_name']).collection(tmp_date).doc(this.tmp_id).set(this.form_.value).then((el1) => {
-          this.alreadySignedIn = true
+
+          console.log("response structure",el1)
+          
+          
+          let txt_ = `Thank you for submitting your data.`
+          // this.alreadySignedIn =true
+          this.form_.disable()
+
+          this.openDialog(txt_)
+
           this.form_.reset()
 
         }).catch(error => {
