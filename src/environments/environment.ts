@@ -6,6 +6,8 @@ export const environment = {
   production: false,
 
   backendURL: "http://192.168.2.3:5000",
+
+  frontendURL: "http://localhost:4200",
   
   firebaseConfig: {
   apiKey: "AIzaSyDXy-m3rYvKqurUwXMg5GeQi9x-WwAztPU",

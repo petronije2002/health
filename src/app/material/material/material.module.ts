@@ -15,7 +15,9 @@ import {MatCheckboxModule} from '@angular/material/checkbox'
 import {MatGridListModule} from '@angular/material/grid-list'
 import {MatCardModule} from '@angular/material/card';
 import { FlexLayoutModule } from "@angular/flex-layout";
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 
@@ -23,6 +25,9 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 @NgModule({
   declarations: [],
   imports: [
+    MatProgressBarModule,
+
+    MatProgressSpinnerModule,
     CommonModule,
     FlexLayoutModule,
     MatCardModule,
@@ -41,6 +46,8 @@ import { FlexLayoutModule } from "@angular/flex-layout";
     MatMenuModule,
   ],
   exports: [
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
     CommonModule,
     FlexLayoutModule,
     MatCardModule,

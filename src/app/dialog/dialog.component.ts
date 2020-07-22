@@ -8,6 +8,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 })
 export class DialogComponent implements OnInit {
   description:string;
+  isSpinner: boolean = false
 
 
 
@@ -16,6 +17,8 @@ export class DialogComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) data) {
 
         this.description = data.title;
+
+       
     }
 
   ngOnInit(): void {

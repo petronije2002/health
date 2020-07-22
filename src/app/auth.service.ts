@@ -1,14 +1,27 @@
+import { WelcomeComponent } from './welcome/welcome.component';
 import { urlParameters, tokenRequest, event_ } from './models/models';
 import { environment } from './../environments/environment';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable, OnInit, AfterContentInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+
+import { Observable, Subject, Subscription } from 'rxjs';
 import { SocialAuthService } from 'angularx-social-login';
 import { DeviceUUID } from './../../node_modules/device-uuid'
+import { DialogComponent } from './dialog/dialog.component';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 
 import * as jwt_decode from 'jwt-decode';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireAuthGuard, hasCustomClaim, customClaims } from '@angular/fire/auth-guard';
 
+import { pipe } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+
+// const adminRole = () => { return hasCustomClaim('role') };
+const adminRole = () => pipe(customClaims, map(claims => claims.role === "admin"));
 
 @Injectable({
   providedIn: 'root'
@@ -20,142 +33,179 @@ export class AuthService implements OnInit {
 
   public logEmitter = new Subject<event_>()
 
+  public tokenSubscription : Subscription
 
-  public isLogin: boolean =false
-  role_ ='visitor'
+  public parametersSubscription : Subscription
 
-  testIfToken :boolean = false
 
   public isAdmin: boolean = false
+  public isLogged: boolean = false
+  public isSignedOut: boolean = false
 
-  isAlreadySigned: boolean = false
-  tmp_id: string = ""
+  public userName: string = 'visitor'
 
-  signOut1 :boolean =false
+  public customToken: string =''
 
+  public tmp_id = new DeviceUUID().get()
 
   constructor(private route: ActivatedRoute,
+    private router: Router,
     private hhtp: HttpClient,
-    private authService: SocialAuthService
+    public db: AngularFirestore,
+    public auth: AngularFireAuth,
+    private dialog: MatDialog
   ) { }
 
 
+  openDialog(text_?: string,) {
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      id: 1,
+      title: text_,
+
+    };
+
+    this.dialog.open(DialogComponent, dialogConfig);
+  }
+
+
   requestToken(): Observable<string> {
-    let tmp_params = JSON.parse(sessionStorage.getItem('urlParameters'))
+
+    // let tmp_params: urlParameters = {
+    //   restaurant_id: '',
+    //   table_number: '0',
+    //   restaurant_name: ''
+    // }
+
+    let tmp_params
+
+    try{
+
+      tmp_params = JSON.parse(sessionStorage.getItem('urlParameters'))
+
+    }catch{
+
+      tmp_params = null
+ 
+    }
+    // let tmp_params = JSON.parse(sessionStorage.getItem('urlParameters'))
     let tmp_token_req: tokenRequest = {
-          uid: sessionStorage.getItem('uniqueID'),
-          parameters: tmp_params,
-          date: new Date().toDateString()
-        }
+      uid: sessionStorage.getItem('uniqueID'),
+      parameters: tmp_params,
+      date: new Date().toDateString()
+    }
     return this.hhtp.post<string>(environment.backendURL + '/returnToken', tmp_token_req)
   }
 
 
-  ngOnInit() {}
+  setParameters(){
+    this.parametersSubscription = this.route.queryParams.subscribe(parm => {
+      console.log("THESE ARE URL PARAMETERs", parm)
+      console.log(sessionStorage.getItem('token') )
+      if (Object.keys(parm).length == 3 || sessionStorage.getItem('token') !== null) {
+        let aaaa = JSON.stringify(parm)
+        sessionStorage.setItem('urlParameters', aaaa)
+        // setTimeout(()=>{},200);
+        let tmp_id = new DeviceUUID().get()
+        sessionStorage.setItem('uniqueID', tmp_id)
+      }
+      else{
 
-  // signOut: Observable<boolean> = Observable.create((observer)=>{
-  //   setInterval(() => {
-  //     observer.next(this.signOut1)
-  //   },1500)
-  // })
+        console.log("NO PARAMETERS")
+
+        // this.openDialog("Please scan QR code")
+        sessionStorage.setItem('urlParameters',null)
+        let tmp_id = new DeviceUUID().get()
+        sessionStorage.setItem('uniqueID', tmp_id)
+        this.isAdmin = false
+        this.isLogged = false
+        this.emitCurrentLogin()
+
+        
+      }
+    })
+
+    
+  }
+
+
+  loginWithToken() {
+    this.setParameters()
+    setTimeout(()=>{},500)
+    this.parametersSubscription.unsubscribe()
+    this.tokenSubscription = this.requestToken().subscribe(tok => {
+      if (tok['token'] == "noToken") {
+        this.isAdmin = false
+        this.isLogged = false
+        this.emitCurrentLogin()
+        // this.openDialog("Please scan QR code: 123")
+      }
+      else {
+        this.auth.signInWithCustomToken(tok['token']).then(usr => {
+
+          this.customToken = tok['token']
+          this.auth.currentUser.then(el => {
+            el.getIdToken().then(tok => {
+              let decoded_ = jwt_decode(tok)
+              console.log("DECODE", decoded_)
+              if (decoded_['role'] === 'admin') {
+                this.isAdmin = true
+                this.userName = decoded_['email']
+              } else {
+                this.isAdmin = false
+              }
+              this.isLogged = true
+              console.log("IsAdmin,IsLogged,userName", this.isAdmin, this.isLogged, this.userName)
+              this.emitCurrentLogin()
+            }).catch(error => console.log('There was an error during signIn process'))
+          }).catch(el2 => {
+          })
+          }
+        )
+      }
+    })
+  }
   
-  emitCurrentLogin(){
+  ngOnInit() {
+    // this.auth.onAuthStateChanged(el => {
+    //   console.log("USER STATUS CHANGED")
+    // })
+  }
 
-    let tmp_ee :event_ ={
+  emitCurrentLogin() {
+    let tmp_ee: event_ = {
       isAdmin: this.isAdmin,
-      isLogged: this.isLogin
-
+      isLogged: this.isLogged,
+      userName: this.userName,
+      isSignedOut: this.isSignedOut
     }
 
     this.logEmitter.next(tmp_ee)
   }
-  
-  loginFromToken() :event_ {
 
-    let tmp_ = sessionStorage.getItem('customToken1');
+  signOut() {
 
-    let tmp_isAdmin : boolean 
+    this.tokenSubscription.unsubscribe()
 
-    let tmp_isLogin: boolean
-
-
-    try{
-      var decoded = jwt_decode(tmp_);
-      this.role_ = decoded['claims']['role']
-
-      if (this.role_=='admin'){
-        tmp_isAdmin=true
-      }else{
-        tmp_isAdmin = false
-      }
-      let tmp_now1 =  (new Date().getTime() / 1000).toFixed(0)
-      if ((Number(tmp_now1),Number(decoded['exp'])-Number(tmp_now1))>0){
-        tmp_isLogin = true
-      }else{
-        tmp_isLogin = true
-      }
-    }catch{
-
-      console.log("there was an error in observable")
-       this.role_ = 'visitor'
-       tmp_isLogin = false
+    let tmp_ee: event_ = {
+      isAdmin: false,
+      isLogged: false,
+      isSignedOut: true
     }
 
-    let ee :event_ = {
-      isAdmin: tmp_isAdmin,
-      isLogged: tmp_isLogin
-    }
+    this.logEmitter.next(tmp_ee)
 
-    this.isAdmin = tmp_isAdmin
-    this.isLogin = tmp_isLogin
+    sessionStorage.clear()
+    // return this.auth.signOut()
 
-    this.logEmitter.next(ee)
-
-    return ee
+      
+    // .catch(error => { console.log('there was an error') }).finally( ()=>this.router.navigate(['']))
 
   }
 
-  // getLogin: Observable<any> = Observable.create((observer) => {
-  //   setInterval(() => {
-
-
-    
-  //     let tmp_ = sessionStorage.getItem('customToken1');
-
-  //     try{
-  //       var decoded = jwt_decode(tmp_);
-  //       this.role_ = decoded['claims']['role']
-
-  //       if (this.role_=='admin'){
-  //         this.isAdmin=true
-  //       }else{
-  //         this.isAdmin = false
-  //       }
-  //       let tmp_now1 =  (new Date().getTime() / 1000).toFixed(0)
-  //       if ((Number(tmp_now1),Number(decoded['exp'])-Number(tmp_now1))>0){
-  //         this.isLogin = true
-  //       }else{
-  //         this.isLogin = false
-  //       }
-  //     }catch{
-  //       console.log("there was an error in observable")
-  //        this.role_ = 'visitor'
-  //        this.isLogin = false
-  //     }
-
-  //     observer.next({'isLogged': this.isLogin, 'role':this.role_,'isAdmin': this.isAdmin})
-
-  //   }, 1500)
-  // })
-
-
-
-  getCurrentValue: Observable<any> = Observable.create((observer) => {
-    setInterval(() => {
-      observer.next({'isLogged': this.isLogin, 'role':this.role_,'isAdmin': this.isAdmin})
-
-    }, 1500)
-  })
 }
 
 

@@ -14,5 +14,7 @@ export interface tokenRequest{
 
     isLogged: boolean,
     isAdmin: boolean,
+    userName?: string,
+    isSignedOut?: boolean
   
   }

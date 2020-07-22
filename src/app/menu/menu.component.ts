@@ -1,3 +1,4 @@
+import { event_ } from './../models/models';
 import { AuthService } from './../auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 // import {  CartOperatorService } from './../../services/cart-operator.service'
@@ -16,8 +17,11 @@ export class MenuComponent implements OnInit , OnDestroy{
   
   constructor(public router: Router, public srv: AuthService) { }
 
-  isAdmin:boolean 
-  isLogged: boolean
+  isAdmin:boolean = false
+  isLogged: boolean = false
+  userName: string = 'visitor'
+
+  event_ : event_ 
   
 
   ngOnInit(): void {
@@ -26,41 +30,45 @@ export class MenuComponent implements OnInit , OnDestroy{
 
       this.isAdmin = ev.isAdmin,
       this.isLogged = ev.isLogged
+
+      this.userName = ev.userName
+
+      if(ev.isSignedOut===true){
+
+      }
+    
     })
-
-    // this.srv.getCurrentValue.subscribe(el=>{
-
-    //   this.isAdmin = el['isAdmin']
-    //   this.isLogged = el['isLogged']
-    //   console.log(this.isAdmin, this.isLogged)
-    // })
 
   }
 
 
   signOut(){
-
-    console.log("sougned")
-
-    // this.srv.signOut1 = true
-
+    
     this.srv.isAdmin = false
-    this.srv.isLogin = false
-
-    sessionStorage.removeItem('token')
-    sessionStorage.removeItem('customToken1')
-
+    this.srv.isLogged = false
+    this.srv.isSignedOut = true
     this.srv.emitCurrentLogin()
 
+    this.srv.auth.signOut().then(er=>{
+      sessionStorage.clear()
+      this.router.navigateByUrl('/home').then(el=>{
+      
+      
 
-    // sessionStorage.clear()
-    // this.auth.isAdmin = false
-    // this.auth.isLogin=false
+      })
 
-  }
+      
+
+      // this.srv.auth.signOut().then(rr=>
+      //   this.srv.logEmitter.unsubscribe()
+      // )
+
+
+  
+  })
+}
 
   ngOnDestroy(){
-  
   }
 
 

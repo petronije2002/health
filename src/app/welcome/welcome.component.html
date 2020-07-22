@@ -29,50 +29,56 @@
 
       <mat-icon matSuffix>mode_edit</mat-icon>
     </mat-form-field>
-
-
-
     <div fxFlex>
       <button mat-raised-button color="primary" (click)="submitForm()" [disabled]="!form_.valid">Submit</button>
-
       <button mat-raised-button (click)="resetForm()">Cancel</button>
-
     </div>
-
-
-
   </div>
 
 </form>
 
-<div>{{error_}}</div>
+<!-- <div>{{error_}}</div> -->
 
 <!-- <div>{{this.token_}}</div>    -->
-<div *ngIf="!isAdmin">
-  <div *ngIf="alreadySignedIn" fxLayout="column" fxLayoutAlign="center stretch"> You provided your data, for healt
-    check. Thank you.
+
+<br>
+<br>
+
+<div fxLayout="column" fxLayoutAlign="space-around center">
+
+  <div fxFlex>
+
+   
+
+    <mat-progress-spinner  *ngIf="isSpinner" class="example-margin" mode="indeterminate">
+    </mat-progress-spinner>
   </div>
 </div>
 
-<!-- <div>USER: {{username}}</div> -->
-
-<div *ngIf="!isAdmin">
-
-  <div fxFlex="10%"></div>
-
-  <div fxFlex="20%" fxLayout="column" fxLayoutAlign="center stretch">
-    <a style="text-transform:none" (click)="signInWithGoogle()">
 
 
 
-      <img width="50px" style="margin-top:100px; margin-right:10px" alt="Google sign-in"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+<div fxLayout="row">
 
-    </a>
+  <div fxFlex="10"></div>
 
-
+  <div fxFill fxFlex="80">
+    <div *ngIf="!isAdmin">
+      <div>
+        <a style="text-transform:none" (click)="signInWithGoogle()">
+          <img width="50px" style="margin-top:100px; margin-right:10px" alt="Google sign-in"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+        </a>
+      </div>
+    </div>
   </div>
-
-
-
 </div>
+
+<!-- <div>{{srv.customToken}}</div> -->
+
+
+
+
+
+
+

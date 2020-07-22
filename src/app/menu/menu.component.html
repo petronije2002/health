@@ -7,8 +7,8 @@
 
 
       <mat-menu #belowMenu="matMenu" yPosition="below">
-        <button mat-menu-item routerLink='/grid' routerLinkActive="active">Shopping</button>
-        <button mat-menu-item routerLink='' routerLinkActive="active"> Create Sections</button>
+        <button mat-menu-item routerLink='/adminsite' routerLinkActive="active">Admin Page</button>
+        <button mat-menu-item [routerLink]="['/qrgen']" routerLinkActive="active"> QR Code Generator</button>
         <button mat-menu-item routerLink='' routerLinkActive="active">Create Menu</button>
         <button mat-menu-item routerLink='' routerLinkActive="active">Menu Builder</button>
 
@@ -17,14 +17,14 @@
       <button *ngIf="isAdmin" mat-button [matMenuTriggerFor]="beforeMenu">Preview</button>
 
       <mat-menu #beforeMenu="matMenu" xPosition="before">
-        <button mat-menu-item routerLink='/previewMenu' routerLinkActive="active">Preview menu</button>
+        <button mat-menu-item routerLink='' routerLinkActive="active">Preview menu</button>
         <button mat-menu-item>2</button>
       </mat-menu>
 
     </div>
 
     <div fxFlex>
-      <button *ngIf="isAdmin" mat-button [matMenuTriggerFor]="loggmenu" >Logged As: {{'pera'}}</button>
+      <button *ngIf="isAdmin" mat-button [matMenuTriggerFor]="loggmenu" >Logged As: {{userName}}</button>
       <mat-menu #loggmenu="matMenu" yPosition="below">
         <button mat-menu-item routerLink='/previewMenu' routerLinkActive="active">Role</button>
         <button mat-menu-item  (click)="signOut()">SignOut</button>

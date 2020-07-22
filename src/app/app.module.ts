@@ -16,8 +16,10 @@ import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-logi
 
 import {MaterialModule} from './material/material/material.module'
 import { HttpConfigInterceptor } from './interceptor/httpconfig.interceptor';
+import {DBService} from './db.service'
+import { QRCodeModule } from 'angularx-qrcode';
 
-
+import { RouterModule } from '@angular/router';
 
 import {
   GoogleLoginProvider,
@@ -27,6 +29,9 @@ import {
 
 import { MenuComponent } from './menu/menu.component';
 import { DialogComponent } from './dialog/dialog.component';
+import { AdminSiteComponent } from './admin-site/admin-site.component';
+import { HomeComponent } from './home/home.component';
+import { QrGenComponent } from './qr-gen/qr-gen.component';
 
 
 
@@ -36,9 +41,14 @@ import { DialogComponent } from './dialog/dialog.component';
     AppComponent,
     WelcomeComponent,
     MenuComponent,
-    DialogComponent
+    DialogComponent,
+    AdminSiteComponent,
+    HomeComponent,
+    QrGenComponent
   ],
   imports: [
+    RouterModule,
+    QRCodeModule,
     HammerModule,
     ReactiveFormsModule,
 
@@ -53,6 +63,7 @@ import { DialogComponent } from './dialog/dialog.component';
     BrowserAnimationsModule
   ],
   providers: [
+    DBService,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {

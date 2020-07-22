@@ -1,0 +1,73 @@
+
+
+
+<div class="welcome">
+
+</div>
+
+
+
+<form [formGroup]="form_">
+    <div fxFlex="10%"></div>
+  
+    <div fxFlex="80%" fxLayout="column" fxLayoutAlign="center stretch">
+  
+      <mat-form-field fxFlex>
+  
+        <input matInput formControlName="table_number"  
+          placeholder="Please enter table number">
+  
+        <mat-icon matSuffix>mode_edit</mat-icon>
+      </mat-form-field>
+      <br>
+  
+      <!-- <mat-form-field fxFlex>
+  
+        <input matInput  value="{{rest_name}}" formControlName="restaurant_name">
+  
+        <mat-icon matSuffix>mode_edit</mat-icon>
+      </mat-form-field> -->
+
+      <mat-form-field appearance="fill">
+        <mat-label>QR Code size</mat-label>
+        <mat-select  formControlName="size_" name="size_" >
+          <mat-option  value=125>Small   </mat-option>
+          <mat-option  value=250>Medium   </mat-option>
+          <mat-option  value=500>Large   </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br>
+  
+      
+      <div fxFlex>
+        <button mat-raised-button color="primary" (click)="generateQR()" [disabled]="!form_.valid">Generate QR</button>
+        <button mat-raised-button (click)="resetForm()">Cancel</button>
+      </div>
+    </div>
+  
+  </form>
+
+<br>
+<br>
+
+
+<div fxLayout="row" fxLayoutAlign="center stretch">
+
+<div fXFlex="10">
+
+</div>
+
+
+<div fxFlex="80" *ngIf="showCode" fxFlexAlign="center" > 
+    
+    <qrcode  [qrdata]="this.urlData" [width]="form_.value['size_']" [errorCorrectionLevel]="'M'"></qrcode>
+    <button (click)="downloadQrCode()"> Download QR CODE</button>
+</div>
+
+<div fXFlex="10">
+
+</div>
+
+
+</div>
+  
