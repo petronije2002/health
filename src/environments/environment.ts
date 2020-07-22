@@ -10,6 +10,7 @@ export const environment = {
   frontendURL: "http://localhost:4200",
   
   firebaseConfig: {
+
   apiKey: "AIzaSyDXy-m3rYvKqurUwXMg5GeQi9x-WwAztPU",
   authDomain: "robust-delight-184620.firebaseapp.com",
   databaseURL: "https://robust-delight-184620.firebaseio.com",
@@ -19,6 +20,7 @@ export const environment = {
   appId: "1:344106497166:web:cfb55a577ffe2ba10845df",
   measurementId: "G-66XL3K55GJ"
   }
+  
 
 
 };

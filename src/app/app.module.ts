@@ -32,6 +32,7 @@ import { DialogComponent } from './dialog/dialog.component';
 import { AdminSiteComponent } from './admin-site/admin-site.component';
 import { HomeComponent } from './home/home.component';
 import { QrGenComponent } from './qr-gen/qr-gen.component';
+import { LocationStrategy, HashLocationStrategy, PathLocationStrategy} from '@angular/common';
 
 
 
@@ -62,7 +63,7 @@ import { QrGenComponent } from './qr-gen/qr-gen.component';
     AppRoutingModule,
     BrowserAnimationsModule
   ],
-  providers: [
+  providers: [{ provide: LocationStrategy, useClass: PathLocationStrategy },
     DBService,
     {
       provide: 'SocialAuthServiceConfig',
@@ -81,7 +82,8 @@ import { QrGenComponent } from './qr-gen/qr-gen.component';
         ],
       } as SocialAuthServiceConfig,
     },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
+    
   ],
   bootstrap: [AppComponent]
 })

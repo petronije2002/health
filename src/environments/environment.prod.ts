@@ -2,8 +2,7 @@ export const environment = {
   production: true,
   backendURL: "https://qrcodelab.azurewebsites.net",
 
-  frontendURL: "http://robust-delight-184620.web.app",
-
+  frontendURL: "https://robust-delight-184620.web.app",
 
   firebaseConfig: {
     

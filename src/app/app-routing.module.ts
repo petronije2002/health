@@ -16,10 +16,11 @@ import { map } from 'rxjs/operators';
 // const adminRole = () => { return hasCustomClaim('role') };
 const adminRole = () => pipe(customClaims, map(claims => claims.role === "admin"));
 
-const routes: Routes = [{path:'registration', component: WelcomeComponent},
+const routes: Routes = [
+
+{path:'registration', component: WelcomeComponent},
 {path:'adminsite', component: AdminSiteComponent,canActivate: [AngularFireAuthGuard], data: { authGuardPipe: adminRole }},
 {path: 'qrgen', component: QrGenComponent,canActivate: [AngularFireAuthGuard], data:{authGuardPipe: adminRole}},
-//, canActivate: [AngularFireAuthGuard], data: { authGuardPipe: adminRole }
 {path:'home',component: HomeComponent},
 {path:'',component: HomeComponent}]
 // , canActivate: [AngularFireAuthGuard], data: { authGuardPipe: adminRole }}];

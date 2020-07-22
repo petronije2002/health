@@ -58,10 +58,11 @@
 </div>
 
 
-<div fxFlex="80" *ngIf="showCode" fxFlexAlign="center" > 
+<div fxFlex="80" *ngIf="showCode"  fxLayout="column" fxLayoutAlign="center center" > 
     
-    <qrcode  [qrdata]="this.urlData" [width]="form_.value['size_']" [errorCorrectionLevel]="'M'"></qrcode>
-    <button (click)="downloadQrCode()"> Download QR CODE</button>
+    <qrcode fxFlex [qrdata]="this.urlData" [width]="form_.value['size_']" [errorCorrectionLevel]="'M'"></qrcode>
+    <br>
+    <button mat-raised-button color="primary"  (click)="downloadQrCode()"> Download QR CODE</button>
 </div>
 
 <div fXFlex="10">
