@@ -31,20 +31,9 @@ export class QrGenComponent implements OnInit {
   ngOnInit(): void {
 
     setTimeout(()=>{
-      this.srv.auth.currentUser.then(el=>el.getIdToken().then(tok=>{
-
-        this.rest_name = jwt_decode(tok)['restaurant_name']
-  
-        console.log(this.rest_name,"URAAA")
-  
-        this.form_.patchValue({'restaurant_name': this.rest_name})
-        
-        console.log("restName",this.rest_name)})).catch(ee=>console.log("no restaurant"))
+        this.form_.patchValue({'restaurant_name': sessionStorage.getItem('restaurant_name')})
     },2000
-
-    )
-
-    
+    ) 
   }
 
 
@@ -58,16 +47,15 @@ export class QrGenComponent implements OnInit {
 
   generateQR(){
 
-    this.urlData = environment.frontendURL + '/#/registration/?'
+    this.urlData = environment.frontendURL + '/registration?'
 
-    this.urlData = this.urlData + `restaurant_name=${this.form_.value['restaurant_name']}&` + `size_=${this.form_.value['size_']}&` + `table_number=${this.form_.value['table_number']}`
+    this.urlData = this.urlData + `restaurant_name=${this.form_.value['restaurant_name']}&` + `restaurant_id=${this.form_.value['size_']}&` + `table_number=${this.form_.value['table_number']}`
     console.log(this.form_.value)
 
     this.showCode = true
 
     console.log("URL DATA for QRCODE", this.urlData)
 
-    
   }
 
   resetForm(){

@@ -73,12 +73,9 @@ import { LocationStrategy, HashLocationStrategy, PathLocationStrategy} from '@an
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-                        
-              "344106497166-cdlji51ggoo1s893fjufar3memsmbvk8.apps.googleusercontent.com"
+               "344106497166-cdlji51ggoo1s893fjufar3memsmbvk8.apps.googleusercontent.com"
             ),
-          }
-          
-          
+          }     
         ],
       } as SocialAuthServiceConfig,
     },

@@ -87,12 +87,20 @@ export class WelcomeComponent implements OnInit {
     })
     
       this.srv.loginWithToken()
-      setTimeout(()=>{this.srv.auth.currentUser.then(cur=>{console.log("Current user is:", cur)})
+      setTimeout(()=>{this.srv.auth.currentUser.then(cur=>{console.log("Current user is1234:", cur)})
 
       this.srv.db.collection('restaurants').doc('bukowsky').collection(new Date().toDateString()).doc(sessionStorage.getItem('uniqueID')).valueChanges().subscribe(dd=>{console.log("document",dd);
-      this.openDialog("You have already submitted registration data. Thank you")
-      this.form_.disable()
+      // 
+      if(dd){
+        this.openDialog("You have already submitted registration data. Thank you")
+        this.form_.disable()
+
+
+      }
+      // 
     },error=>{
+
+      
 
       if(this.srv.isLogged==false && this.srv.isSignedOut===false){
 
@@ -122,7 +130,7 @@ export class WelcomeComponent implements OnInit {
       
     })
 
-  },1000)
+  },2000)
   
   }
 

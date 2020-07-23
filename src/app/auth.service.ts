@@ -144,12 +144,24 @@ export class AuthService implements OnInit {
         // this.openDialog("Please scan QR code: 123")
       }
       else {
+
+
+        sessionStorage.setItem('customToken1', tok['token'])
+
+        
+
+        // this.auth.setPersistence('local').then(el=>{console.log("PERSISTENT",el);
+
+
         this.auth.signInWithCustomToken(tok['token']).then(usr => {
 
           this.customToken = tok['token']
+          console.log("CustomToken", this.customToken)
           this.auth.currentUser.then(el => {
             el.getIdToken().then(tok => {
               let decoded_ = jwt_decode(tok)
+
+              sessionStorage.setItem('restaurant_name',decoded_['restaurant_name'])
               console.log("DECODE", decoded_)
               if (decoded_['role'] === 'admin') {
                 this.isAdmin = true
@@ -158,6 +170,9 @@ export class AuthService implements OnInit {
                 this.isAdmin = false
               }
               this.isLogged = true
+              
+
+              
               console.log("IsAdmin,IsLogged,userName", this.isAdmin, this.isLogged, this.userName)
               this.emitCurrentLogin()
             }).catch(error => console.log('There was an error during signIn process'))
@@ -165,11 +180,16 @@ export class AuthService implements OnInit {
           })
           }
         )
+        
       }
     })
   }
   
   ngOnInit() {
+
+    // this.auth.user.subscribe(el=>console.log('user', el))
+
+    
     // this.auth.onAuthStateChanged(el => {
     //   console.log("USER STATUS CHANGED")
     // })
