@@ -1,0 +1,61 @@
+
+<div class="welcome">
+</div>
+
+<form [formGroup]="form_" >
+  <div fxFlex="25%"></div>
+
+  <div fxFlex="50%" fxLayout="column" fxLayoutAlign="center stretch">
+
+    <mat-form-field fxFlex>
+
+      <input matInput formControlName="username" 
+        placeholder="Please enter your username" 
+        >
+
+      <mat-icon matSuffix>mode_edit</mat-icon>
+      
+      <mat-error *ngIf="form_.controls['username'].hasError('email') && !form_.controls['username'].hasError('required')">
+        Please enter a valid email address
+      </mat-error>
+      <mat-error *ngIf="form_.controls['username'].hasError('required')">
+        Email is <strong>required</strong>
+      </mat-error>
+     
+    </mat-form-field>
+    <br>
+
+    <mat-form-field fxFlex>
+
+      <input matInput type="password" formControlName="password" placeholder="Please enter your password" 
+      
+      >
+
+      <mat-icon matSuffix>mode_edit</mat-icon>
+    </mat-form-field>
+    <br>
+
+    <div fxFlex>
+      <button mat-raised-button color="primary" (click)="submitForm()" [disabled]="!form_.valid">Login</button>
+      <button mat-raised-button (click)="resetForm()">Cancel</button>
+    </div>
+  </div>
+
+</form>
+
+<br>
+<br>
+
+<div fxLayout="row">
+<div fxFlex="25%"></div>
+
+
+<div fxLayout="column">
+<div fxFlex="50%" *ngIf="resetPassword"><a   (click)="tryAgain()"> Wrong username or password. Please try again  </a> </div>
+<br>
+
+<div fxFlex="50%" *ngIf="resetPassword"><a   (click)="resetPasswordFunction()"><strong> Would you like to reset the password? </strong> </a> </div>
+
+</div>
+
+</div>

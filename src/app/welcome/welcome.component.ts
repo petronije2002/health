@@ -89,47 +89,25 @@ export class WelcomeComponent implements OnInit {
       this.srv.loginWithToken()
       setTimeout(()=>{this.srv.auth.currentUser.then(cur=>{console.log("Current user is1234:", cur)})
 
-      this.srv.db.collection('restaurants').doc('bukowsky').collection(new Date().toDateString()).doc(sessionStorage.getItem('uniqueID')).valueChanges().subscribe(dd=>{console.log("document",dd);
-      // 
+      this.srv.db.collection('restaurants').doc('bukowsky').collection(new Date().toDateString()).doc(sessionStorage.getItem('uniqueID')).valueChanges().subscribe(dd=>{console.log("document",dd); 
       if(dd){
         this.openDialog("You have already submitted registration data. Thank you")
         this.form_.disable()
-
-
       }
-      // 
     },error=>{
-
-      
-
       if(this.srv.isLogged==false && this.srv.isSignedOut===false){
-
         this.openDialog("Please scan QR code")
-
         this.form_.disable()
-
         return
       }
-
-
       if(this.srv.isSignedOut==false){
         // this.openDialog("Please submit registration data")
         console.log(error);
-        
       }
       if(this.srv.isSignedOut===true){
-
         this.openDialog("You are signed out.Thank you for using BarPass")
-
-
-
-
-        
       }
-
-      
     })
-
   },2000)
   
   }

@@ -33,6 +33,8 @@ import { AdminSiteComponent } from './admin-site/admin-site.component';
 import { HomeComponent } from './home/home.component';
 import { QrGenComponent } from './qr-gen/qr-gen.component';
 import { LocationStrategy, HashLocationStrategy, PathLocationStrategy} from '@angular/common';
+import { LoginComponent } from './login/login.component';
+import { PasswordresetComponent } from './passwordreset/passwordreset.component';
 
 
 
@@ -45,7 +47,9 @@ import { LocationStrategy, HashLocationStrategy, PathLocationStrategy} from '@an
     DialogComponent,
     AdminSiteComponent,
     HomeComponent,
-    QrGenComponent
+    QrGenComponent,
+    LoginComponent,
+    PasswordresetComponent
   ],
   imports: [
     RouterModule,

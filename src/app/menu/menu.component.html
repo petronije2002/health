@@ -3,6 +3,8 @@
 
     <div fxFlex="80">
 
+      <button  mat-button  routerLink='/home'><mat-icon>home</mat-icon></button>
+
       <button  *ngIf="isAdmin" mat-button [matMenuTriggerFor]="belowMenu">Menu</button>
 
 
@@ -24,12 +26,15 @@
     </div>
 
     <div fxFlex>
+      
       <button *ngIf="isAdmin" mat-button [matMenuTriggerFor]="loggmenu" >Logged As: {{userName}}</button>
       <mat-menu #loggmenu="matMenu" yPosition="below">
-        <button mat-menu-item routerLink='/previewMenu' routerLinkActive="active">Role</button>
+        <!-- <button mat-menu-item routerLink='/previewMenu' routerLinkActive="active">Role</button> -->
         <button mat-menu-item  (click)="signOut()">SignOut</button>
       </mat-menu>
     </div>
+
+    <button  mat-button *ngIf="!isLogged" routerLink='/login'><mat-icon>login</mat-icon></button>
 
 
   </mat-toolbar-row>

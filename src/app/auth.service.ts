@@ -71,6 +71,45 @@ export class AuthService implements OnInit {
     this.dialog.open(DialogComponent, dialogConfig);
   }
 
+  receiveCustomTokenFromUsernamePassowrd(username_,password_){
+    let tmp_token_req = {
+      username: username_,
+      password: password_  
+    }
+    return this.hhtp.post<string>(environment.backendURL + '/signInUser', tmp_token_req)
+  }
+
+
+  loginWithCustomToken(costomToken_){
+
+    this.auth.signInWithCustomToken(costomToken_).then(usr => {
+
+      let decoded_ = jwt_decode(costomToken_)
+      console.log(decoded_)
+      this.userName = decoded_.claims.userName
+      
+      if(decoded_.claims.role==='admin' || decoded_.claims.role=='owner'){
+
+        this.isAdmin = true
+      }
+
+      this.isLogged = true
+      this.emitCurrentLogin()
+
+    })
+
+
+
+
+  }
+
+  
+
+
+
+
+
+
 
   requestToken(): Observable<string> {
 
@@ -170,7 +209,7 @@ export class AuthService implements OnInit {
                 this.isAdmin = false
               }
               this.isLogged = true
-              
+
 
               
               console.log("IsAdmin,IsLogged,userName", this.isAdmin, this.isLogged, this.userName)
@@ -225,6 +264,9 @@ export class AuthService implements OnInit {
     // .catch(error => { console.log('there was an error') }).finally( ()=>this.router.navigate(['']))
 
   }
+
+
+
 
 }
 

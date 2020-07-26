@@ -38,12 +38,9 @@ export class QrGenComponent implements OnInit {
 
 
   form_: FormGroup = new FormGroup({
-    table_number: new FormControl(null),
+    table_number: new FormControl(null,[Validators.required, Validators.max(999)]),
     restaurant_name: new FormControl(null),
-    size_: new FormControl(null)
-
-  })
-
+    size_: new FormControl(null,Validators.required)})
 
   generateQR(){
 

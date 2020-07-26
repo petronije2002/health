@@ -1,3 +1,5 @@
+import { PasswordresetComponent } from './passwordreset/passwordreset.component';
+import { LoginComponent } from './login/login.component';
 import { QrGenComponent } from './qr-gen/qr-gen.component';
 import { HomeComponent } from './home/home.component';
 import { AdminSiteComponent } from './admin-site/admin-site.component';
@@ -14,13 +16,16 @@ import { map } from 'rxjs/operators';
 
 
 // const adminRole = () => { return hasCustomClaim('role') };
-const adminRole = () => pipe(customClaims, map(claims => claims.role === "admin"));
+const adminRole = () => pipe(customClaims, map(claims => claims.role === "admin" ));
+const ownerRole = () => pipe(customClaims, map(claims => claims.role === "owner" || claims.role==="admin" ));
 
 const routes: Routes = [
 
 {path:'registration', component: WelcomeComponent},
-{path:'adminsite', component: AdminSiteComponent,canActivate: [AngularFireAuthGuard], data: { authGuardPipe: adminRole }},
-{path: 'qrgen', component: QrGenComponent,canActivate: [AngularFireAuthGuard], data:{authGuardPipe: adminRole}},
+{path:'adminsite', component: AdminSiteComponent,canActivate: [AngularFireAuthGuard], data: { authGuardPipe: ownerRole }},
+{path: 'qrgen', component: QrGenComponent,canActivate: [AngularFireAuthGuard], data:{authGuardPipe: ownerRole}},
+{path:'login',component: LoginComponent},
+{path: 'reset', component: PasswordresetComponent},
 {path:'home',component: HomeComponent},
 {path:'',component: HomeComponent}]
 // , canActivate: [AngularFireAuthGuard], data: { authGuardPipe: adminRole }}];
