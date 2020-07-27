@@ -23,6 +23,8 @@
         <button mat-menu-item>2</button>
       </mat-menu>
 
+      <button *ngIf="isAdmin" mat-button >{{restaurantName}}</button>
+
     </div>
 
     <div fxFlex>

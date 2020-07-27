@@ -6,7 +6,9 @@ export interface urlParameters{
 
 export interface tokenRequest{
     uid: string
-    parameters: Object
+    restaurantID: string,
+    restaurantName: string,
+    tableNumber: string
     date: string
   }
 
@@ -15,6 +17,7 @@ export interface tokenRequest{
     isLogged: boolean,
     isAdmin: boolean,
     userName?: string,
-    isSignedOut?: boolean
+    isSignedOut?: boolean,
+    restaurantName?: string
   
   }

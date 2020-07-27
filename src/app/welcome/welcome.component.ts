@@ -13,6 +13,7 @@ import {SocialUser ,SocialAuthService, GoogleLoginProvider } from "angularx-soci
 import {urlParameters,tokenRequest, event_} from './../models/models'
 import { Subscription } from 'rxjs';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import * as jwt_decode from 'jwt-decode';
 
 
 @Component({
@@ -24,7 +25,11 @@ import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 export class WelcomeComponent implements OnInit {
   error_
 
+  parametersSubscription: Subscription
+
   spinner_value = 0
+
+  ifDocument: boolean 
 
   isSpinner: boolean = false
 
@@ -46,15 +51,15 @@ export class WelcomeComponent implements OnInit {
   tmp_id = new DeviceUUID().get()
 
   form_: FormGroup = new FormGroup({
-    name_: new FormControl(null, Validators.required),
-    phone_: new FormControl(null, Validators.required),
-    email_: new FormControl(null)
-
+    name_: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
+    phone_: new FormControl(null, [Validators.required, Validators.maxLength(16)]),
+    email_: new FormControl(null,[Validators.email,Validators.required,Validators.maxLength(120)])
   })
 
   user: SocialUser 
 
   constructor(
+      private route: ActivatedRoute,
       public router: Router,
        public srv: AuthService, 
       // private auth: AngularFireAuth,
@@ -64,81 +69,99 @@ export class WelcomeComponent implements OnInit {
       ) { }
 
   
-
   ngOnInit(): void {
 
+    this.srv.ifDocument.subscribe(res=>{
 
-    this.srv.logEmitter.subscribe(ev=>{
-      this.isAdmin = ev.isAdmin
-      this.isLogged = ev.isLogged
+      if(res==true){
 
-      if(ev.isSignedOut===true){
-
-        console.log("The signe out event is:", ev.isSignedOut)
-        
-        // sessionStorage.clear()
-        
-        this.srv.logEmitter.unsubscribe()
-        this.srv.auth.signOut().then(el=>{console.log("singedout")})
-        this.form_.reset()
+        this.openDialog('You have already submitted data.Thank you.')
         this.form_.disable()
+
+        this.srv.documentSubscription.unsubscribe()
+
+        this.srv.ifDocument.unsubscribe()
+
+
+      }else{
+
+        this.openDialog('Please submit your registration data')
+
+        this.srv.ifDocument.unsubscribe()
 
       }
     })
-    
-      this.srv.loginWithToken()
-      setTimeout(()=>{this.srv.auth.currentUser.then(cur=>{console.log("Current user is1234:", cur)})
 
-      this.srv.db.collection('restaurants').doc('bukowsky').collection(new Date().toDateString()).doc(sessionStorage.getItem('uniqueID')).valueChanges().subscribe(dd=>{console.log("document",dd); 
-      if(dd){
-        this.openDialog("You have already submitted registration data. Thank you")
-        this.form_.disable()
+      
+
+
+    this.parametersSubscription = this.route.queryParams.subscribe(parm => {
+      console.log("THESE ARE URL PARAMETERs", parm)
+      console.log(sessionStorage.getItem('token') )
+      if (Object.keys(parm).length == 3) {
+       
+          let tmp_id = new DeviceUUID().get()
+
+          sessionStorage.setItem('deviceID', tmp_id)
+          sessionStorage.setItem('restaurantID',parm.restaurantID)
+          sessionStorage.setItem('restaurantName',parm.restaurantName)
+          sessionStorage.setItem('tableNumber',parm.tableNumber)
       }
-    },error=>{
-      if(this.srv.isLogged==false && this.srv.isSignedOut===false){
+      else{
+        console.log("NO PARAMETERS")
         this.openDialog("Please scan QR code")
+        sessionStorage.setItem('urlParameters',null)
+        let tmp_id = new DeviceUUID().get()
+        sessionStorage.setItem('uniqueID', tmp_id)
         this.form_.disable()
-        return
+      
       }
-      if(this.srv.isSignedOut==false){
-        // this.openDialog("Please submit registration data")
-        console.log(error);
+    },error=>{console.log("There was an error with query parameters", error)})
+    
+    this.srv.requestToken().subscribe(tok=>{console.log('token',tok);
+      sessionStorage.setItem('customTokenVisitor', tok['token'])
+
+      if (tok['token']!=='noToken'){
+
+        let decoded = jwt_decode(tok['token'])
+
+        sessionStorage.setItem('uid', decoded['uid'])
+
+        this.srv.loginWithToken()
+
       }
-      if(this.srv.isSignedOut===true){
-        this.openDialog("You are signed out.Thank you for using BarPass")
-      }
-    })
-  },2000)
-  
+    }
+
+    )
   }
 
-  signInWithGoogle() {
-    const googleLoginOptions =  {
-      scope: 'profile email'
-    }; 
+  // signInWithGoogle() {
+  //   const googleLoginOptions =  {
+  //     scope: 'profile email'
+  //   }; 
 
-    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then((rr)=>{console.log("RESULT", rr);
-    this.form_.patchValue({'name_': rr.name});
-    this.form_.patchValue({'email_': rr.email});
+  //   this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then((rr)=>{console.log("RESULT", rr);
+  //   this.form_.patchValue({'name_': rr.name});
+  //   this.form_.patchValue({'email_': rr.email});
 
-    this.readonly_=true
-    this.srv.isAdmin=true
-    this.srv.isLogged = true
+  //   this.readonly_=true
+  //   this.srv.isAdmin=true
+  //   this.srv.isLogged = true
     
-    this.srv.emitCurrentLogin()
+  //   this.srv.emitCurrentLogin()
 
-    console.log("GOOGLE TOKEN", rr)
+  //   console.log("GOOGLE TOKEN", rr)
 
-    sessionStorage.setItem('token', rr.idToken)
+  //   sessionStorage.setItem('token', rr.idToken)
 
-    this.srv.loginWithToken()
+  //   this.srv.loginWithToken()
 
 
   
-  }).catch(error=>console.log("Error"))
+  // }).catch(error=>console.log("Error"))
   
    
-  }
+  // }
 
 
   resetForm(){
@@ -171,30 +194,43 @@ export class WelcomeComponent implements OnInit {
     this.isSpinner = true
     let tmp_date = new Date().toDateString()
 
-    let aaaa = JSON.parse(sessionStorage.getItem('urlParameters'))
-
-    console.log("AAAA",aaaa)
+    let restaurantID = sessionStorage.getItem('restaurantID')
 
     let bbb = sessionStorage.getItem('uniqueID')
 
-    this.srv.db.collection('restaurants').doc(aaaa['restaurant_name']).collection(tmp_date).doc(bbb).set(this.form_.value).then((el1) => {
+    this.srv.db.collection('restaurants').doc(restaurantID).collection('registrations').doc('visitors').collection(new Date().toDateString()).doc(sessionStorage.getItem('deviceID')).set(this.form_.value).then((el1) => {
 
-      console.log("response structure",el1)
-    
-      let txt_ = `Thank you for submitting your data.`
-      // this.alreadySignedIn =true
+      console.log("EL1", el1)
 
       this.isSpinner = false
-      this.form_.disable()
-
-      this.openDialog(txt_)
+      this.openDialog("Thank you for submitting registration data")
 
       this.form_.reset()
 
-    }).catch(error => {
-      console.log('there was an error')
-      this.isSpinner = false
+      this.form_.disable()
     })
+
+
+  //   this.srv.db.collection('restaurants').doc(restaurantID).collection(tmp_date).doc(bbb).set(this.form_.value).then((el1) => {
+
+  //     console.log("response structure",el1)
+    
+  //     let txt_ = `Thank you for submitting your data.`
+  //     // this.alreadySignedIn =true
+
+  //     this.isSpinner = false
+  //     this.form_.disable()
+
+  //     this.openDialog(txt_)
+
+  //     this.form_.reset()
+
+  //   }).catch(error => {
+  //     console.log('there was an error')
+  //     this.isSpinner = false
+  //   })
+
+  // }
 
   }
 

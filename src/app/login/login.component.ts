@@ -44,6 +44,8 @@ export class LoginComponent implements OnInit {
       console.log("CustomToken",customToken);
 
       
+
+      
       this.srv.loginWithCustomToken(customToken['token'])
 
       this.router.navigate(['/home'])

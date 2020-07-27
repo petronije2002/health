@@ -21,7 +21,7 @@ import { map } from 'rxjs/operators';
 
 
 // const adminRole = () => { return hasCustomClaim('role') };
-const adminRole = () => pipe(customClaims, map(claims => claims.role === "admin"));
+// const adminRole = () => pipe(customClaims, map(claims => claims.role === "admin"));
 
 @Injectable({
   providedIn: 'root'
@@ -33,9 +33,13 @@ export class AuthService implements OnInit {
 
   public logEmitter = new Subject<event_>()
 
+  public ifDocument = new Subject<boolean>()
+
   public tokenSubscription : Subscription
 
   public parametersSubscription : Subscription
+
+  public documentSubscription : Subscription
 
 
   public isAdmin: boolean = false
@@ -87,6 +91,13 @@ export class AuthService implements OnInit {
       let decoded_ = jwt_decode(costomToken_)
       console.log(decoded_)
       this.userName = decoded_.claims.userName
+
+      sessionStorage.setItem('restaurantID',decoded_.claims.restaurantID)
+      sessionStorage.setItem('restaurantName',decoded_.claims.restaurantName)
+      sessionStorage.setItem('role',decoded_.claims.role)
+      sessionStorage.setItem('userName',decoded_.claims.userName)
+
+
       
       if(decoded_.claims.role==='admin' || decoded_.claims.role=='owner'){
 
@@ -103,37 +114,15 @@ export class AuthService implements OnInit {
 
   }
 
-  
-
-
-
-
-
-
 
   requestToken(): Observable<string> {
 
-    // let tmp_params: urlParameters = {
-    //   restaurant_id: '',
-    //   table_number: '0',
-    //   restaurant_name: ''
-    // }
-
-    let tmp_params
-
-    try{
-
-      tmp_params = JSON.parse(sessionStorage.getItem('urlParameters'))
-
-    }catch{
-
-      tmp_params = null
- 
-    }
-    // let tmp_params = JSON.parse(sessionStorage.getItem('urlParameters'))
+    
     let tmp_token_req: tokenRequest = {
       uid: sessionStorage.getItem('uniqueID'),
-      parameters: tmp_params,
+      restaurantID: sessionStorage.getItem('restaurantID'),
+      restaurantName: sessionStorage.getItem('restaurantName'),
+      tableNumber: sessionStorage.getItem('tableNumber'),
       date: new Date().toDateString()
     }
     return this.hhtp.post<string>(environment.backendURL + '/returnToken', tmp_token_req)
@@ -144,7 +133,7 @@ export class AuthService implements OnInit {
     this.parametersSubscription = this.route.queryParams.subscribe(parm => {
       console.log("THESE ARE URL PARAMETERs", parm)
       console.log(sessionStorage.getItem('token') )
-      if (Object.keys(parm).length == 3 || sessionStorage.getItem('token') !== null) {
+      if (Object.keys(parm).length == 3) {
         let aaaa = JSON.stringify(parm)
         sessionStorage.setItem('urlParameters', aaaa)
         // setTimeout(()=>{},200);
@@ -159,11 +148,7 @@ export class AuthService implements OnInit {
         sessionStorage.setItem('urlParameters',null)
         let tmp_id = new DeviceUUID().get()
         sessionStorage.setItem('uniqueID', tmp_id)
-        this.isAdmin = false
-        this.isLogged = false
-        this.emitCurrentLogin()
-
-        
+      
       }
     })
 
@@ -172,74 +157,52 @@ export class AuthService implements OnInit {
 
 
   loginWithToken() {
-    this.setParameters()
-    setTimeout(()=>{},500)
-    this.parametersSubscription.unsubscribe()
-    this.tokenSubscription = this.requestToken().subscribe(tok => {
-      if (tok['token'] == "noToken") {
-        this.isAdmin = false
-        this.isLogged = false
-        this.emitCurrentLogin()
-        // this.openDialog("Please scan QR code: 123")
-      }
-      else {
 
+    let result: boolean
+    this.auth.signInWithCustomToken(sessionStorage.getItem('customTokenVisitor')).then(usr => {
+      console.log("LOGGED USER", usr );
+      console.log(sessionStorage.getItem('restaurantID'),sessionStorage.getItem('deviceID'))
 
-        sessionStorage.setItem('customToken1', tok['token'])
-
+      this.documentSubscription = this.db.collection('restaurants').doc(sessionStorage.getItem('restaurantID')).collection('registrations').doc('visitors').collection(new Date().toDateString()).doc(sessionStorage.getItem('deviceID')).valueChanges().subscribe((el1) => {
         
+        if(typeof el1 !== 'undefined' ){
+        console.log("Read document",el1)
+        result = true
 
-        // this.auth.setPersistence('local').then(el=>{console.log("PERSISTENT",el);
+        this.ifDocument.next(result)}
+        else{
 
+          this.ifDocument.next(false)
 
-        this.auth.signInWithCustomToken(tok['token']).then(usr => {
+        }
+      
+    },error=>{
+      
+      console.log(error);
 
-          this.customToken = tok['token']
-          console.log("CustomToken", this.customToken)
-          this.auth.currentUser.then(el => {
-            el.getIdToken().then(tok => {
-              let decoded_ = jwt_decode(tok)
-
-              sessionStorage.setItem('restaurant_name',decoded_['restaurant_name'])
-              console.log("DECODE", decoded_)
-              if (decoded_['role'] === 'admin') {
-                this.isAdmin = true
-                this.userName = decoded_['email']
-              } else {
-                this.isAdmin = false
-              }
-              this.isLogged = true
+      result = false
+      this.ifDocument.next(result)
+      
+      })
 
 
-              
-              console.log("IsAdmin,IsLogged,userName", this.isAdmin, this.isLogged, this.userName)
-              this.emitCurrentLogin()
-            }).catch(error => console.log('There was an error during signIn process'))
-          }).catch(el2 => {
-          })
-          }
-        )
-        
-      }
-    })
+
+  
+  })
+
+  
+
   }
   
-  ngOnInit() {
-
-    // this.auth.user.subscribe(el=>console.log('user', el))
-
-    
-    // this.auth.onAuthStateChanged(el => {
-    //   console.log("USER STATUS CHANGED")
-    // })
-  }
+  ngOnInit() {}
 
   emitCurrentLogin() {
     let tmp_ee: event_ = {
       isAdmin: this.isAdmin,
       isLogged: this.isLogged,
       userName: this.userName,
-      isSignedOut: this.isSignedOut
+      isSignedOut: this.isSignedOut,
+      restaurantName: sessionStorage.getItem('restaurantName')
     }
 
     this.logEmitter.next(tmp_ee)

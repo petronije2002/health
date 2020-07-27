@@ -21,6 +21,8 @@ export class MenuComponent implements OnInit , OnDestroy{
   isLogged: boolean = false
   userName: string = 'visitor'
 
+  restaurantName: string = ''
+
   event_ : event_ 
   
 
@@ -32,6 +34,8 @@ export class MenuComponent implements OnInit , OnDestroy{
       this.isLogged = ev.isLogged
 
       this.userName = ev.userName
+
+      this.restaurantName= ev.restaurantName
 
       if(ev.isSignedOut===true){
 

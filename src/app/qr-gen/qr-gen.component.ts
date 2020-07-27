@@ -30,8 +30,10 @@ export class QrGenComponent implements OnInit {
 
   ngOnInit(): void {
 
+    console.log('rastName',sessionStorage.getItem('restaurantName'))
+
     setTimeout(()=>{
-        this.form_.patchValue({'restaurant_name': sessionStorage.getItem('restaurant_name')})
+        this.form_.patchValue({'restaurant_name': sessionStorage.getItem('restaurantName')})
     },2000
     ) 
   }
@@ -44,9 +46,9 @@ export class QrGenComponent implements OnInit {
 
   generateQR(){
 
-    this.urlData = environment.frontendURL + '/registration?'
+    this.urlData = environment.frontendURL + '/registration?' 
 
-    this.urlData = this.urlData + `restaurant_name=${this.form_.value['restaurant_name']}&` + `restaurant_id=${this.form_.value['size_']}&` + `table_number=${this.form_.value['table_number']}`
+    this.urlData = this.urlData + `restaurantName=${sessionStorage.getItem('restaurantName')}&` + `restaurantID=${sessionStorage.getItem('restaurantID')}&` + `tableNumber=${this.form_.value['table_number']}`
     console.log(this.form_.value)
 
     this.showCode = true
@@ -75,7 +77,7 @@ export class QrGenComponent implements OnInit {
 
     var a = document.createElement("a"); //Create <a>
     a.href = imgData //Image Base64 Goes here
-    a.download = "QRCode.png"; //File name Here
+    a.download = "QRCode+" + `${this.urlData}` + ".png"; //File name Here
     a.click()
     // // c.namedItem('canvas')[0]
 
