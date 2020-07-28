@@ -1,46 +1,51 @@
-<mat-toolbar  color="primary" class="navbar" >
-  <mat-toolbar-row fxFlexLayout="row" fxFlexAlign="start center">
+<div class="app123">
+  <mat-toolbar class="navbar" >
+    <mat-toolbar-row fxFlexLayout="row" fxFlexAlign="start center">
 
-    <div fxFlex="80">
+      <div fxFlex="90">
+        <button mat-button routerLink='/home'>
+          <mat-icon>home</mat-icon>
+        </button>
 
-      <button  mat-button  routerLink='/home'><mat-icon>home</mat-icon></button>
+        <button *ngIf="isAdmin" mat-button [matMenuTriggerFor]="belowMenu">Menu</button>
 
-      <button  *ngIf="isAdmin" mat-button [matMenuTriggerFor]="belowMenu">Menu</button>
+        <mat-menu #belowMenu="matMenu" yPosition="below" class="dropDown">
+          <button mat-menu-item routerLink='/adminsite' routerLinkActive="active">Admin Page</button>
+          <button mat-menu-item [routerLink]="['/qrgen']" routerLinkActive="active"> QR Code Generator</button>
+          <button mat-menu-item routerLink='' routerLinkActive="active">Create Menu</button>
+          <button mat-menu-item routerLink='' routerLinkActive="active">Menu Builder</button>
+        </mat-menu>
 
+        <button *ngIf="isAdmin" mat-button [matMenuTriggerFor]="beforeMenu">Preview</button>
 
-      <mat-menu #belowMenu="matMenu" yPosition="below">
-        <button mat-menu-item routerLink='/adminsite' routerLinkActive="active">Admin Page</button>
-        <button mat-menu-item [routerLink]="['/qrgen']" routerLinkActive="active"> QR Code Generator</button>
-        <button mat-menu-item routerLink='' routerLinkActive="active">Create Menu</button>
-        <button mat-menu-item routerLink='' routerLinkActive="active">Menu Builder</button>
+        <mat-menu #beforeMenu="matMenu" xPosition="before" class="dropDown">
+          <button mat-menu-item routerLink='' routerLinkActive="active">Preview menu</button>
+          <button mat-menu-item>2</button>
+        </mat-menu>
+        <button *ngIf="isAdmin" mat-button>{{restaurantName}}</button>
 
-      </mat-menu>
+      </div>
 
-      <button *ngIf="isAdmin" mat-button [matMenuTriggerFor]="beforeMenu">Preview</button>
+      <div fxFlex>
 
-      <mat-menu #beforeMenu="matMenu" xPosition="before">
-        <button mat-menu-item routerLink='' routerLinkActive="active">Preview menu</button>
-        <button mat-menu-item>2</button>
-      </mat-menu>
+        <button class="intialsButton" *ngIf="isAdmin" mat-mini-fab [matMenuTriggerFor]="loggmenu">{{initials}}</button>
+        <mat-menu #loggmenu="matMenu" yPosition="below" class="dropDown">
+          <!-- <button mat-menu-item routerLink='/previewMenu' routerLinkActive="active">Role</button> -->
+          <button mat-menu-item (click)="signOut()">SignOut</button>
+        </mat-menu>
+      </div>
 
-      <button *ngIf="isAdmin" mat-button >{{restaurantName}}</button>
-
-    </div>
-
-    <div fxFlex>
-      
-      <button *ngIf="isAdmin" mat-button [matMenuTriggerFor]="loggmenu" >Logged As: {{userName}}</button>
-      <mat-menu #loggmenu="matMenu" yPosition="below">
-        <!-- <button mat-menu-item routerLink='/previewMenu' routerLinkActive="active">Role</button> -->
-        <button mat-menu-item  (click)="signOut()">SignOut</button>
-      </mat-menu>
-    </div>
-
-    <button  mat-button *ngIf="!isLogged" routerLink='/login'><mat-icon>login</mat-icon></button>
-
-
-  </mat-toolbar-row>
-</mat-toolbar>
+      <button mat-button *ngIf="!isLogged" routerLink='/login'>
+        <mat-icon>login</mat-icon>
+      </button>
 
 
-<router-outlet></router-outlet>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <br>
+  <br>
+
+  
+    <router-outlet></router-outlet>
+</div>

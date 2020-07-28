@@ -1,4 +1,19 @@
+
+
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.backGr{
+
+    padding-top: 20px;
+    padding-bottom: 120px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color:#061551 ;
+    opacity: 0.98;
+    color: beige
+
+}

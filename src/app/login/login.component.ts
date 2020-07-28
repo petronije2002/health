@@ -1,13 +1,35 @@
 import { AuthService } from './../auth.service';
 import { FormGroup, FormControl, Validators, FormGroupDirective, NgForm } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { trigger, transition, animate, style,state } from '@angular/animations'
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  animations: [
+    trigger('fading1', [
+      // ...
+      state('fadeOut', style({
+       
+        opacity: 0
+       
+      })),
+      state('fadeIn', style({
+        
+        opacity: 1
+        
+      })),
+      transition('fadeOut => fadeIn', [
+        animate('0.5s')
+      ]),
+      transition('fadeIn => fadeOut', [
+        animate('0.5s')
+      ])
+      
+    ]),
+  ],
 })
 
 
@@ -24,6 +46,7 @@ export class LoginComponent implements OnInit {
 
   resetPassword: boolean = false
 
+  fading:boolean
 
 
   constructor(public srv: AuthService, private router: Router) { }
@@ -35,7 +58,15 @@ export class LoginComponent implements OnInit {
   })
 
   ngOnInit(): void {
+
+    setTimeout(()=>{
+      this.fading=true
+    },300)
+
   }
+
+  
+  
 
   submitForm(){
 

@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 import { DeviceUUID } from './../../../node_modules/device-uuid'
 import { AngularFirestore } from '@angular/fire/firestore'
 import { AngularFireAuth } from '@angular/fire/auth'
-import {SocialUser ,SocialAuthService, GoogleLoginProvider } from "angularx-social-login";
+// import {SocialUser ,SocialAuthService, GoogleLoginProvider } from "angularx-social-login";
 import {urlParameters,tokenRequest, event_} from './../models/models'
 import { Subscription } from 'rxjs';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
@@ -56,14 +56,14 @@ export class WelcomeComponent implements OnInit {
     email_: new FormControl(null,[Validators.email,Validators.required,Validators.maxLength(120)])
   })
 
-  user: SocialUser 
+  // user: SocialUser 
 
   constructor(
       private route: ActivatedRoute,
       public router: Router,
        public srv: AuthService, 
       // private auth: AngularFireAuth,
-      private authService: SocialAuthService,
+      // private authService: SocialAuthService,
       // private http: HttpClient,
       private dialog: MatDialog
       ) { }

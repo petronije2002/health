@@ -5,19 +5,19 @@ import { MatButtonModule } from '@angular/material/button'
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatTabsModule} from '@angular/material/tabs'
+// import {MatTabsModule} from '@angular/material/tabs'
 import {MatInputModule} from '@angular/material/input'
 import {MatSelectModule} from '@angular/material/select';
 import {MatDialogModule} from '@angular/material/dialog';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatCheckboxModule} from '@angular/material/checkbox'
-import {MatGridListModule} from '@angular/material/grid-list'
-import {MatCardModule} from '@angular/material/card';
+// import {MatExpansionModule} from '@angular/material/expansion';
+// import {MatTooltipModule} from '@angular/material/tooltip';
+// import {MatCheckboxModule} from '@angular/material/checkbox'
+// import {MatGridListModule} from '@angular/material/grid-list'
+// import {MatCardModule} from '@angular/material/card';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+// import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 
@@ -25,20 +25,20 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 @NgModule({
   declarations: [],
   imports: [
-    MatProgressBarModule,
+    // MatProgressBarModule,
 
     MatProgressSpinnerModule,
     CommonModule,
     FlexLayoutModule,
-    MatCardModule,
-    MatGridListModule,
-    MatCheckboxModule,
-    MatTooltipModule,
-    MatExpansionModule,
+    // MatCardModule,
+    // MatGridListModule,
+    // MatCheckboxModule,
+    // MatTooltipModule,
+    // MatExpansionModule,
     MatDialogModule,
     MatSelectModule,
     MatInputModule,
-    MatTabsModule,
+    // MatTabsModule,
     MatFormFieldModule,
     MatIconModule,
     MatToolbarModule,
@@ -46,19 +46,19 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     MatMenuModule,
   ],
   exports: [
-    MatProgressBarModule,
+    // MatProgressBarModule,
     MatProgressSpinnerModule,
     CommonModule,
     FlexLayoutModule,
-    MatCardModule,
-    MatGridListModule,
-    MatCheckboxModule,
-    MatTooltipModule,
-    MatExpansionModule,
+    // MatCardModule,
+    // MatGridListModule,
+    // MatCheckboxModule,
+    // MatTooltipModule,
+    // MatExpansionModule,
     MatDialogModule,
     MatSelectModule,
     MatInputModule,
-    MatTabsModule,
+    // MatTabsModule,
     MatFormFieldModule,
     MatIconModule,
     MatToolbarModule,

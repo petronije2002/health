@@ -1,8 +1,12 @@
+
+
 .navbar{
     position: fixed;
     justify-content: space-between;
     z-index: 2;
-  
+    background-color: #061551 !important;
+    color: beige;
+    
   }
   
   .matBadge{
@@ -12,6 +16,29 @@
   .favoriteIcon{
     font-size: medium;
   }
+
+  .app123{
+
+
+
+    background-image: url("./../../assets/background.png");
+    
+    background-position: top center; 
+    background-size: 50%;
+    height: 70%;
+    
+    
   
-  
-  
+
+  }
+
+  .intialsButton{
+    background-color: cornflowerblue !important;
+    font-size: small;
+  }
+
+  ::ng-deep .dropDown{
+
+  background-color: cornflowerblue !important;
+}
+

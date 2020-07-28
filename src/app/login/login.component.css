@@ -1,4 +1,30 @@
 .welcome{
 
     padding-top: 80px;
+
+    /* color: beige; */
+    
+}
+
+/* .backGr{
+
+    padding-top: 20px;
+    padding-bottom: 120px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color:#061551 ;
+    opacity: 0.98;
+    color: beige
+
+} */
+
+
+.warning{
+    color: beige
+    ;
+}
+
+button{
+    color: white !important;
+    background-color:#061551;
 }

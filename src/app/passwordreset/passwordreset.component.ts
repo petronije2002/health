@@ -45,6 +45,7 @@ export class PasswordresetComponent implements OnInit {
 
   resetForm(){
     this.form_.reset()
+    this.showMessage = false
 
   }
 

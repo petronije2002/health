@@ -1,10 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
-import { AuthService } from './auth.service';
-import { DeviceUUID } from './../../node_modules/device-uuid'
-import { AngularFirestore } from '@angular/fire/firestore'
+
 import { AngularFireAuth } from '@angular/fire/auth'
-import {urlParameters,tokenRequest, event_} from './models/models'
-import { SocialAuthService } from 'angularx-social-login';
 import {AngularFireDatabase, AngularFireList, AngularFireObject} from '@angular/fire/database'
 
 @Injectable({

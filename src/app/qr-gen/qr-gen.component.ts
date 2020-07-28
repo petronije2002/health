@@ -1,11 +1,7 @@
 import { environment } from './../../environments/environment';
-import { logging } from 'protractor';
 import { AuthService } from './../auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import * as jwt_decode from 'jwt-decode';
-import { DomSanitizer } from '@angular/platform-browser';
-
 
 @Component({
   selector: 'app-qr-gen',

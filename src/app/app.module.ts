@@ -12,7 +12,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
+// import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 
 import {MaterialModule} from './material/material/material.module'
 import { HttpConfigInterceptor } from './interceptor/httpconfig.interceptor';
@@ -21,11 +21,11 @@ import { QRCodeModule } from 'angularx-qrcode';
 
 import { RouterModule } from '@angular/router';
 
-import {
-  GoogleLoginProvider,
-  FacebookLoginProvider,
-  AmazonLoginProvider,
-} from 'angularx-social-login';
+// import {
+//   GoogleLoginProvider,
+//   FacebookLoginProvider,
+//   AmazonLoginProvider,
+// } from 'angularx-social-login';
 
 import { MenuComponent } from './menu/menu.component';
 import { DialogComponent } from './dialog/dialog.component';
@@ -58,7 +58,7 @@ import { PasswordresetComponent } from './passwordreset/passwordreset.component'
     ReactiveFormsModule,
 
     MaterialModule,
-    SocialLoginModule,
+    // SocialLoginModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireDatabaseModule,
     HttpClientModule,
@@ -69,23 +69,25 @@ import { PasswordresetComponent } from './passwordreset/passwordreset.component'
   ],
   providers: [{ provide: LocationStrategy, useClass: PathLocationStrategy },
     DBService,
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-               "344106497166-cdlji51ggoo1s893fjufar3memsmbvk8.apps.googleusercontent.com"
-            ),
-          }     
-        ],
-      } as SocialAuthServiceConfig,
-    },
+    // {
+    //   provide: 'SocialAuthServiceConfig',
+    //   useValue: {
+    //     autoLogin: false,
+    //     providers: [
+    //       {
+    //         id: GoogleLoginProvider.PROVIDER_ID,
+    //         provider: new GoogleLoginProvider(
+    //            "344106497166-cdlji51ggoo1s893fjufar3memsmbvk8.apps.googleusercontent.com"
+    //         ),
+    //       }     
+    //     ],
+    //   } as SocialAuthServiceConfig,
+    // },
     { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
     
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+

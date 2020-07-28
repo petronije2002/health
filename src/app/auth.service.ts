@@ -5,7 +5,7 @@ import { Injectable, OnInit, AfterContentInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable, Subject, Subscription } from 'rxjs';
-import { SocialAuthService } from 'angularx-social-login';
+// import { SocialAuthService } from 'angularx-social-login';
 import { DeviceUUID } from './../../node_modules/device-uuid'
 import { DialogComponent } from './dialog/dialog.component';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
