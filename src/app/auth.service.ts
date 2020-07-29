@@ -96,8 +96,7 @@ export class AuthService implements OnInit {
       sessionStorage.setItem('restaurantName',decoded_.claims.restaurantName)
       sessionStorage.setItem('role',decoded_.claims.role)
       sessionStorage.setItem('userName',decoded_.claims.userName)
-
-
+      sessionStorage.setItem('regDomain',decoded_.claims.regDomain)
       
       if(decoded_.claims.role==='admin' || decoded_.claims.role=='owner'){
 
@@ -108,16 +107,11 @@ export class AuthService implements OnInit {
       this.emitCurrentLogin()
 
     })
-
-
-
-
   }
 
 
   requestToken(): Observable<string> {
 
-    
     let tmp_token_req: tokenRequest = {
       uid: sessionStorage.getItem('uniqueID'),
       restaurantID: sessionStorage.getItem('restaurantID'),
@@ -152,7 +146,7 @@ export class AuthService implements OnInit {
       }
     })
 
-    
+ 
   }
 
 

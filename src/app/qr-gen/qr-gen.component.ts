@@ -42,13 +42,12 @@ export class QrGenComponent implements OnInit {
 
   generateQR(){
 
-    this.urlData = environment.frontendURL + '/registration?' 
+    this.urlData = sessionStorage.getItem('regDomain') + '/registration?' 
 
     this.urlData = this.urlData + `restaurantName=${sessionStorage.getItem('restaurantName')}&` + `restaurantID=${sessionStorage.getItem('restaurantID')}&` + `tableNumber=${this.form_.value['table_number']}`
     console.log(this.form_.value)
 
     this.showCode = true
-
     console.log("URL DATA for QRCODE", this.urlData)
 
   }
