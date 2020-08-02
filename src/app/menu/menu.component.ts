@@ -38,7 +38,7 @@ export class MenuComponent implements OnInit , OnDestroy{
 
       this.userName = ev.userName
 
-      this.initials = this.userName.split(" ").map((n)=>n[0]).join(".")
+      this.initials = this.srv.userName.split(" ").map((n)=>n[0]).join(".")
 
       this.restaurantName= ev.restaurantName
 

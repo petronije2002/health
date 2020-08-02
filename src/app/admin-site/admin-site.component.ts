@@ -29,11 +29,15 @@ export class AdminSiteComponent implements OnInit {
 
   ngOnInit(): void {
 
+    
+
     this.srv.logEmitter.subscribe(ev=>{
       this.isAdmin = ev.isAdmin
       this.isLogged = ev.isLogged
     }
   )
+
+  this.srv.downloadFile()
     
   }
 

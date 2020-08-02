@@ -2,7 +2,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { urlParameters, tokenRequest, event_ } from './models/models';
 import { environment } from './../environments/environment';
 import { Injectable, OnInit, AfterContentInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, Subject, Subscription } from 'rxjs';
 // import { SocialAuthService } from 'angularx-social-login';
@@ -17,7 +17,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireAuthGuard, hasCustomClaim, customClaims } from '@angular/fire/auth-guard';
 
 import { pipe } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 
 // const adminRole = () => { return hasCustomClaim('role') };
@@ -34,6 +35,8 @@ export class AuthService implements OnInit {
   public logEmitter = new Subject<event_>()
 
   public ifDocument = new Subject<boolean>()
+
+  public urlDownload = new Subject<string>()
 
   public tokenSubscription : Subscription
 
@@ -57,11 +60,76 @@ export class AuthService implements OnInit {
     private hhtp: HttpClient,
     public db: AngularFirestore,
     public auth: AngularFireAuth,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private storage: AngularFireStorage
   ) { }
 
 
   
+  downloadFile(){
+
+    let restID = sessionStorage.getItem('restaurantID')
+
+    let ref1 = this.storage.storage.ref(restID).child('images').child('burger-3-2.jpg')
+
+    setTimeout(()=>{
+
+      let ref1 = this.storage.storage.ref(restID).child('images').child('burger-3-2.jpg')
+
+      ref1.getDownloadURL().then((url_)=>{console.log("you can download",url_);
+      return this.urlDownload.next(url_)
+      });
+
+      
+
+
+    },500)
+
+
+    
+
+
+    // let restID = sessionStorage.getItem('restaurantID')
+
+    // console.log("RestID", restID)
+
+
+    // let ref1 = this.storage.storage.ref(restID).child('images').child('burger-3-2.jpg')
+
+    // setTimeout(()=>{
+    //   ref1.getDownloadURL().then((url_)=>{console.log("you can download",url_);
+
+    //   let header_ = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'})
+
+
+    //   header_  = header_.set("origin", ["*"])
+
+
+
+
+    //   // header_.set( "origin", ["*"])
+    //   header_.set("method", ["GET"])
+    //   header_.set("maxAgeSeconds",'3600')
+
+      
+    
+    //   this.hhtp.get(url_,{headers: header_}).subscribe((file)=>{
+    //     console.log("This isthe file", file)
+    //   })
+      
+    //   return url_
+    
+    //   }).catch(error=>console.log(error))
+    // },500)
+
+    
+  
+
+    // console.log( "gs://robust-delight-184620.appspot.com/" + sessionStorage.getItem('restaurantID')+'/'+'promoImg'+'/'+'burger-3.jpg')
+    // var pathReference = this.storage.ref(sessionStorage.getItem('restaurantID')+'/'+'promoImg'+'/'+'burger-3.jpg');
+    // ref.getDownloadURL().subscribe(el=>{console.log("What is this",el)})
+  }
+
   checkIfLogged(){
 
     this.auth.user.subscribe(usr=>{
@@ -93,7 +161,7 @@ export class AuthService implements OnInit {
         this.userName = tmp_dec.userName
 
 
-        // console.log("UNANME", tmp_dec.userName)
+        console.log("UNANME", tmp_dec.userName)
 
 
 

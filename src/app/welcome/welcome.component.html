@@ -1,85 +1,11 @@
 <div class="welcome">
 </div>
 
-<form [formGroup]="form_" *ngIf="!isAdmin">
-  <div fxFlex="10%"></div>
 
-  <div fxFlex="80%" fxLayout="column" fxLayoutAlign="center stretch">
+<div class="psImage" >
 
-    <mat-form-field fxFlex>
-
-      <mat-label>Email</mat-label>
-
-      <input matInput formControlName="name_" autocomplete="username" [readonly]="readonly_"
-        placeholder="Please enter your name">
-
-      <mat-icon matSuffix>mode_edit</mat-icon>
-    </mat-form-field>
-    <br>
-
-    <mat-form-field fxFlex>
-      <mat-label>Phone number</mat-label>
-
-      <input matInput type="tel" formControlName="phone_" placeholder="Please enter your phone number">
-
-      <mat-icon matSuffix>mode_edit</mat-icon>
-    </mat-form-field>
-    <br>
-
-    <mat-form-field fxFlex>
-
-      <mat-label>Email</mat-label>
-
-      <input matInput type="email" formControlName="email_" placeholder="Please enter email" [readonly]="readonly_">
-
-      <mat-icon matSuffix>mode_edit</mat-icon>
-    </mat-form-field>
-    <div fxFlex>
-      <button mat-raised-button color="primary" (click)="submitForm()" [disabled]="!form_.valid">Submit</button>
-      <button mat-raised-button (click)="resetForm()">Cancel</button>
-    </div>
-  </div>
-
-</form>
-
-<!-- <div>{{error_}}</div> -->
-
-<!-- <div>{{this.token_}}</div>    -->
-
-<br>
-<br>
-
-<div fxLayout="column" fxLayoutAlign="space-around center">
-
-  <div fxFlex>
-
-   
-
-    <mat-progress-spinner  *ngIf="isSpinner" class="example-margin" mode="indeterminate">
-    </mat-progress-spinner>
-  </div>
+  <img width="400" height="600" src="{{imageUrl}}">
 </div>
-
-
-<!-- 
-
-<div fxLayout="row">
-
-  <div fxFlex="10"></div>
-
-  <div fxFill fxFlex="80">
-    <div *ngIf="!isAdmin">
-      <div>
-        <a style="text-transform:none" (click)="signInWithGoogle()">
-          <img width="50px" style="margin-top:100px; margin-right:10px" alt="Google sign-in"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
-        </a>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-<!-- <div>{{srv.customToken}}</div> -->
 
 
 

@@ -36,7 +36,8 @@ import { LocationStrategy, HashLocationStrategy, PathLocationStrategy} from '@an
 import { LoginComponent } from './login/login.component';
 import { PasswordresetComponent } from './passwordreset/passwordreset.component';
 
-
+import {AngularFireStorageModule}  from "@angular/fire/storage";
+import { PromotionsComponent } from './promotions/promotions.component';
 
 
 @NgModule({
@@ -49,9 +50,12 @@ import { PasswordresetComponent } from './passwordreset/passwordreset.component'
     HomeComponent,
     QrGenComponent,
     LoginComponent,
-    PasswordresetComponent
+    PasswordresetComponent,
+    PromotionsComponent
   ],
   imports: [
+    AngularFireStorageModule,
+   
     RouterModule,
     QRCodeModule,
     HammerModule,
