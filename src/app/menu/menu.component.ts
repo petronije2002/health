@@ -20,8 +20,9 @@ export class MenuComponent implements OnInit , OnDestroy{
   isAdmin:boolean = false
   isLogged: boolean = false
   userName: string = 'visitor'
+  initials: string 
 
-  initials = this.userName.split(" ").map((n)=>n[0]).join(".")
+  // initials = this.userName.split(" ").map((n)=>n[0]).join(".")
 
   restaurantName: string = ''
 

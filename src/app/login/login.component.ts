@@ -59,6 +59,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.srv.checkIfLogged()
+
     setTimeout(()=>{
       this.fading=true
     },300)

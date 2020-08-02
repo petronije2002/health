@@ -4,7 +4,7 @@
   <form [formGroup]="form_" [@fading1]="fading ? 'fadeIn' : 'fadeOut'">
     <div fxFlex="25%" fxFlex.lt-md="10%"></div>
 
-    <div  class="backGr" fxFlex="50%"  fxFlex.lt-md="80%" fxLayout="column" fxLayoutAlign="center stretch">
+    <div  class="backGr" fxFlex="50%"  fxFlex.lt-md="80%" fxLayout="column" fxLayoutAlign="center stretch" *ngIf="this.srv.isLogged==false">
 
       <mat-form-field fxFlex>
 

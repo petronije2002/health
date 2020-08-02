@@ -8,7 +8,7 @@ export const environment = {
   backendURL: "http://127.0.0.1:5000",
   // "http://192.168.2.3:5000",
 
-  frontendURL: "http://localhost:4200",
+  // frontendURL: "http://localhost:4200",
   
   firebaseConfig: {
 

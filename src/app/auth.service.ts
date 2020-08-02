@@ -61,6 +61,54 @@ export class AuthService implements OnInit {
   ) { }
 
 
+  
+  checkIfLogged(){
+
+    this.auth.user.subscribe(usr=>{
+
+
+      if(usr){usr.getIdToken().then(tok1=>{
+
+        let tmp_dec = jwt_decode(tok1)
+
+
+        if(tmp_dec.role=='admin' || tmp_dec.role=='owner'){
+
+          this.isAdmin = true
+          this.isLogged = true
+        }else{
+          this.isAdmin = false
+          this.isLogged = true
+
+        }
+
+        sessionStorage.setItem('restaurantName', tmp_dec.restaurantName)
+        sessionStorage.setItem('restaurantID',tmp_dec.restaurantID)
+        sessionStorage.setItem('restaurantName',tmp_dec.restaurantName)
+        sessionStorage.setItem('role',tmp_dec.role)
+        sessionStorage.setItem('userName',tmp_dec.userName)
+        sessionStorage.setItem('regDomain',tmp_dec.regDomain)
+
+
+        this.userName = tmp_dec.userName
+
+
+        // console.log("UNANME", tmp_dec.userName)
+
+
+
+        this.emitCurrentLogin()
+
+        console.log(jwt_decode(tok1))
+      })}
+
+     })
+
+
+    
+  }
+
+
   openDialog(text_?: string,) {
 
     const dialogConfig = new MatDialogConfig();
@@ -104,6 +152,8 @@ export class AuthService implements OnInit {
       }
 
       this.isLogged = true
+      this.isSignedOut= false
+
       this.emitCurrentLogin()
 
     })

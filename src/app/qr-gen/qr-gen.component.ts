@@ -16,7 +16,7 @@ export class QrGenComponent implements OnInit {
 
 
 
-  urlData :string = environment.frontendURL + '/registration/?'
+  urlData :string
   fileUrl
   rest_name: string= "no name"
 
